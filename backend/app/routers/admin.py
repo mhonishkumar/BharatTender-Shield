@@ -3,8 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app import models, schemas
-from app.core.security import require_role
-from app.core.security import get_password_hash
+from app.core.security import require_role, get_current_user, get_password_hash
 
 router = APIRouter(prefix="/api/admin", tags=["Admin"])
 
@@ -30,9 +29,12 @@ def toggle_user_active(
 
 @router.get("/stats")
 def get_system_stats(
-    current_user: models.User = Depends(require_role(["ADMIN", "PROCUREMENT_OFFICER"])),
+    current_user: models.User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    if current_user.role not in ["ADMIN", "PROCUREMENT_OFFICER"]:
+        raise HTTPException(status_code=403, detail="Access denied")
+        
     total_users = db.query(models.User).count()
     total_tenders = db.query(models.Tender).count()
     total_applications = db.query(models.Application).count()
