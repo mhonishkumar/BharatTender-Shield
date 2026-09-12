@@ -96,7 +96,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
     setRole(null);
     setToken(null);
-    router.push("/");
+    router.push("/login");
   };
 
   return (

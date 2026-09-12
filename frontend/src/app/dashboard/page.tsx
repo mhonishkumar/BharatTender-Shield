@@ -41,7 +41,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!isLoading && !user) {
-      router.push("/");
+      router.push("/login");
       return;
     }
     if (user) {
@@ -183,7 +183,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Main SIH Demo Tender Callout */}
-              <div className="bg-gradient-to-r from-slate-900 to-[#0F294A] text-white p-5 rounded-lg shadow-sm border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="bg-linear-to-r from-slate-900 to-[#0F294A] text-white p-5 rounded-lg shadow-sm border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
                     <span className="bg-orange-600 text-white text-[10px] font-bold px-2 py-0.5 rounded tracking-wide uppercase">

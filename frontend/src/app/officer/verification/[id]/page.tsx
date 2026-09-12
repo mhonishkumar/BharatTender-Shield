@@ -55,7 +55,7 @@ export default function BidderVerificationPage() {
 
   useEffect(() => {
     if (!isLoading && !user) {
-      router.push("/");
+      router.push("/login");
       return;
     }
     loadData();
@@ -265,7 +265,7 @@ export default function BidderVerificationPage() {
               </div>
               <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
                 <div
-                  className="bg-gradient-to-r from-orange-500 to-emerald-500 h-2 rounded-full transition-all duration-300"
+                  className="bg-linear-to-r from-orange-500 to-emerald-500 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${pipelineProgress}%` }}
                 />
               </div>
