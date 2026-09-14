@@ -46,6 +46,12 @@ export default function LandingPage() {
     { code: "te", label: "Telugu", native: "తెలుగు" },
     { code: "kn", label: "Kannada", native: "ಕನ್ನಡ" },
     { code: "ml", label: "Malayalam", native: "മലയാളം" },
+    { code: "bn", label: "Bengali", native: "বাংলা" },
+    { code: "mr", label: "Marathi", native: "मराठी" },
+    { code: "gu", label: "Gujarati", native: "ગુજરાતી" },
+    { code: "or", label: "Odia", native: "ଓଡ଼ିଆ" },
+    { code: "pa", label: "Punjabi", native: "ਪੰਜਾਬੀ" },
+    { code: "as", label: "Assamese", native: "অসমীয়া" },
   ];
 
   const slideGradients = [
@@ -278,6 +284,10 @@ export default function LandingPage() {
             <Link href="/audit" className="hover:text-[#0F294A] px-2.5 py-1.5 rounded transition-colors flex items-center space-x-1">
               <Shield className="w-3.5 h-3.5 text-orange-600 inline" />
               <span>{t.navAuditVault}</span>
+            </Link>
+            <Link href="/admin" className="hover:text-[#0F294A] px-2.5 py-1.5 rounded transition-colors flex items-center space-x-1">
+              <Lock className="w-3.5 h-3.5 text-emerald-600 inline" />
+              <span>{t.navAdminPortal}</span>
             </Link>
             <Link href="/login" className="hover:text-[#0F294A] px-2.5 py-1.5 rounded transition-colors">
               {t.navVendorReg}
