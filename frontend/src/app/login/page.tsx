@@ -25,7 +25,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between">
       {/* Top Banner */}
       <div className="bg-[#0F294A] text-white py-1.5 px-4 text-center text-xs font-medium tracking-wide">
-        Smart India Hackathon 2026 — Problem Statement 26100 • GeM Procurement Compliance Platform
+        Government of India • Ministry of Petroleum & Natural Gas • Chennai Petroleum Corporation Limited (CPCL)
       </div>
 
       <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">

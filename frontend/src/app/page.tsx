@@ -16,80 +16,60 @@ import {
   ChevronLeft,
   ChevronRight,
   Globe,
-  Bell,
-  ExternalLink,
   Building2,
   FileSpreadsheet,
-  Award,
   BookOpen,
   HelpCircle,
   LogIn,
   UserPlus,
-  Flame,
   CheckCircle,
-  AlertCircle
+  ExternalLink,
+  Layers,
+  ChevronDown
 } from "lucide-react";
+import { translations, Language } from "@/lib/i18n";
 
 export default function LandingPage() {
-  // Hero Carousel State
+  const [lang, setLang] = useState<Language>("en");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
   const [fontSize, setFontSize] = useState<"normal" | "large" | "xlarge">("normal");
+  const [isLangOpen, setIsLangOpen] = useState(false);
 
-  const slides = [
-    {
-      title: "Chennai Petroleum Corporation Limited (CPCL)",
-      subtitle: "Ministry of Petroleum & Natural Gas • Government of India",
-      headline: "Invitation for Expression of Interest (EoI)",
-      description:
-        "Global E-Procurement Tenders for Manali & Nagapattinam Refineries. AI-Assisted Bid Compliance Verification with Tamper-Evident SHA-256 Audit Trail.",
-      tag: "Notice No: CPCL/PROC/2026/089",
-      bgGradient: "from-[#0F294A] via-[#1E3A8A] to-[#0F294A]",
-      badge: "LIVE E-TENDER NOTICE",
-      actionText: "View Tender Details",
-      actionLink: "/login"
-    },
-    {
-      title: "BharatTender Shield • Automated Bid Compliance",
-      subtitle: "Government e-Marketplace (GeM) Integration Platform",
-      headline: "Deterministic AI Rule Extraction & Verification",
-      description:
-        "Cross-verify GSTIN, PAN, Udyam MSME Certificates, Financial Turnover Thresholds, and Bid-Date Validity instantly with zero manual delay.",
-      tag: "SIH 2026 • Problem Statement 26100",
-      bgGradient: "from-[#064E3B] via-[#047857] to-[#064E3B]",
-      badge: "AI-ASSISTED COMPLIANCE",
-      actionText: "Access Demo Portal",
-      actionLink: "/login"
-    },
-    {
-      title: "Clean & Transparent Public Procurement",
-      subtitle: "Chennai Petroleum Corporation Limited (CPCL)",
-      headline: "Tamper-Evident SHA-256 Cryptographic Audit Logs",
-      description:
-        "Every verification decision, officer override, and document extraction is locked in an immutable hash chain for total legal defensibility.",
-      tag: "CPCL Digital Initiative 2026",
-      bgGradient: "from-[#7C2D12] via-[#C2410C] to-[#7C2D12]",
-      badge: "SECURITY & AUDIT",
-      actionText: "Inspect Audit Vault",
-      actionLink: "/audit"
-    }
+  const t = translations[lang] || translations.en;
+
+  const languagesList: { code: Language; label: string; native: string }[] = [
+    { code: "en", label: "English", native: "English" },
+    { code: "hi", label: "Hindi", native: "हिन्दी" },
+    { code: "ta", label: "Tamil", native: "தமிழ்" },
+    { code: "te", label: "Telugu", native: "తెలుగు" },
+    { code: "kn", label: "Kannada", native: "ಕನ್ನಡ" },
+    { code: "ml", label: "Malayalam", native: "മലയാളം" },
   ];
+
+  const slideGradients = [
+    "from-[#0B1E36] via-[#16365C] to-[#0B1E36]",
+    "from-[#064E3B] via-[#0D6B50] to-[#064E3B]",
+    "from-[#7C2D12] via-[#9A3412] to-[#7C2D12]"
+  ];
+
+  const slideLinks = ["/login", "/login", "/audit"];
 
   // Auto slide carousel
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 6000);
+      setCurrentSlide((prev) => (prev + 1) % t.slides.length);
+    }, 6500);
     return () => clearInterval(timer);
-  }, [slides.length]);
+  }, [t.slides.length]);
 
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % t.slides.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + t.slides.length) % t.slides.length);
 
   const tenders = [
     {
-      id: "GEM-DEMO-2026-001",
+      id: "CPCL-PROC-2026-089",
       title: "Supply & Installation of High-Pressure Catalyst Tubes for CDU-III",
       dept: "Refinery Operations (CPCL Manali)",
       value: "₹ 14.50 Cr",
@@ -98,31 +78,31 @@ export default function LandingPage() {
       status: "ACTIVE"
     },
     {
-      id: "GEM-DEMO-2026-002",
-      title: "Annual Maintenance & Turnaround Services for Fluid Catalytic Cracking Unit",
-      dept: "Maintenance Division",
+      id: "CPCL-PROC-2026-090",
+      title: "Annual Turnaround & Maintenance Contract for Fluid Catalytic Cracker",
+      dept: "Mechanical Maintenance",
       value: "₹ 8.20 Cr",
       deadline: "2026-10-22",
       category: "Services",
       status: "ACTIVE"
     },
     {
-      id: "GEM-DEMO-2026-003",
-      title: "Procurement of Industrial Gas Sensors & Explosion-Proof Monitoring Systems",
-      dept: "Safety & Environment",
+      id: "CPCL-PROC-2026-091",
+      title: "Procurement of Industrial Gas Detectors & SIL-2 Safety Systems",
+      dept: "HSE & Industrial Safety",
       value: "₹ 3.75 Cr",
       deadline: "2026-11-05",
       category: "Safety",
       status: "NEW"
     },
     {
-      id: "GEM-DEMO-2026-004",
-      title: "Supply of High-Grade Desalination Chemicals & Water Treatment Reagents",
-      dept: "Chemical Process Tech",
+      id: "CPCL-PROC-2026-092",
+      title: "Bulk Supply of High-Grade Desalination & Demineralization Chemicals",
+      dept: "Process Chemical Tech",
       value: "₹ 2.10 Cr",
       deadline: "2026-11-12",
       category: "Chemicals",
-      status: "UPCOMING"
+      status: "ACTIVE"
     }
   ];
 
@@ -132,65 +112,104 @@ export default function LandingPage() {
         fontSize === "large" ? "text-base" : fontSize === "xlarge" ? "text-lg" : "text-sm"
       }`}
     >
-      {/* 1. TOP UTILITY BAR (Official Government Header Style) */}
+      {/* 1. TOP UTILITY BAR (Official Indian Government Portal Header) */}
       <div className="bg-[#0B1E36] text-slate-200 border-b border-blue-900/60 px-4 py-1.5 text-xs">
         <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
-          {/* Left Government Org Branding */}
+          {/* Left Government Organization Identity */}
           <div className="flex items-center space-x-3">
-            <span className="font-semibold text-orange-400 flex items-center space-x-1">
-              <Building2 className="w-3.5 h-3.5 inline" />
-              <span>भारत सरकार | Govt. of India</span>
+            <span className="font-semibold text-orange-400 flex items-center space-x-1.5">
+              <Building2 className="w-3.5 h-3.5 inline text-orange-400" />
+              <span>{t.govtOfIndia}</span>
             </span>
-            <span className="text-slate-500">|</span>
+            <span className="text-slate-500 hidden sm:inline">|</span>
             <span className="hidden md:inline text-slate-300 font-medium">
-              पेट्रोलियम और प्राकृतिक गैस मंत्रालय | Ministry of Petroleum & Natural Gas
+              {t.ministryName}
             </span>
           </div>
 
-          {/* Right Utility Controls */}
+          {/* Right Utility Controls: Font Sizing & 6-Language Switcher */}
           <div className="flex items-center space-x-4">
+            {/* Font Accessibility */}
             <div className="flex items-center space-x-1 border-r border-slate-700 pr-3">
-              <span className="text-[11px] text-slate-400">Font:</span>
+              <span className="text-[11px] text-slate-400 mr-1">Font:</span>
               <button
                 onClick={() => setFontSize("normal")}
-                className={`px-1 rounded text-[11px] font-bold ${fontSize === "normal" ? "bg-orange-500 text-white" : "hover:text-white"}`}
+                className={`px-1.5 py-0.5 rounded text-[11px] font-bold transition-colors ${
+                  fontSize === "normal" ? "bg-orange-500 text-white" : "text-slate-300 hover:text-white"
+                }`}
+                title="Default Font Size"
               >
                 A
               </button>
               <button
                 onClick={() => setFontSize("large")}
-                className={`px-1 rounded text-[11px] font-bold ${fontSize === "large" ? "bg-orange-500 text-white" : "hover:text-white"}`}
+                className={`px-1.5 py-0.5 rounded text-[11px] font-bold transition-colors ${
+                  fontSize === "large" ? "bg-orange-500 text-white" : "text-slate-300 hover:text-white"
+                }`}
+                title="Large Font Size"
               >
                 A+
               </button>
               <button
                 onClick={() => setFontSize("xlarge")}
-                className={`px-1 rounded text-[11px] font-bold ${fontSize === "xlarge" ? "bg-orange-500 text-white" : "hover:text-white"}`}
+                className={`px-1.5 py-0.5 rounded text-[11px] font-bold transition-colors ${
+                  fontSize === "xlarge" ? "bg-orange-500 text-white" : "text-slate-300 hover:text-white"
+                }`}
+                title="Extra Large Font Size"
               >
                 A++
               </button>
             </div>
 
-            <div className="flex items-center space-x-1 text-slate-300">
-              <Globe className="w-3.5 h-3.5" />
-              <span className="font-medium text-[11px]">English / हिंदी</span>
+            {/* 6-Language Dropdown Selector */}
+            <div className="relative">
+              <button
+                onClick={() => setIsLangOpen(!isLangOpen)}
+                className="flex items-center space-x-1.5 bg-slate-800/80 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded text-[11px] font-medium transition-colors border border-slate-700"
+              >
+                <Globe className="w-3.5 h-3.5 text-orange-400" />
+                <span>{languagesList.find((l) => l.code === lang)?.native || "Language"}</span>
+                <ChevronDown className="w-3 h-3 text-slate-400" />
+              </button>
+
+              {isLangOpen && (
+                <div className="absolute right-0 mt-1 w-40 bg-white rounded-md shadow-xl border border-slate-200 py-1 z-50 text-xs">
+                  {languagesList.map((item) => (
+                    <button
+                      key={item.code}
+                      onClick={() => {
+                        setLang(item.code);
+                        setIsLangOpen(false);
+                      }}
+                      className={`w-full text-left px-3 py-1.5 flex items-center justify-between transition-colors ${
+                        lang === item.code
+                          ? "bg-blue-50 text-[#0F294A] font-bold"
+                          : "text-slate-700 hover:bg-slate-100"
+                      }`}
+                    >
+                      <span>{item.native}</span>
+                      <span className="text-[10px] text-slate-400">{item.label}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             <Link
               href="/login"
-              className="bg-orange-600 hover:bg-orange-500 text-white px-2.5 py-0.5 rounded text-[11px] font-semibold flex items-center space-x-1 transition-colors"
+              className="bg-orange-600 hover:bg-orange-500 text-white px-3 py-1 rounded text-[11px] font-semibold flex items-center space-x-1 transition-colors shadow-xs"
             >
               <LogIn className="w-3 h-3" />
-              <span>SIH Demo Portal</span>
+              <span>{t.signInButton}</span>
             </Link>
           </div>
         </div>
       </div>
 
-      {/* 2. MAIN HEADER & BRANDING */}
+      {/* 2. MAIN HEADER & LOGO BRANDING */}
       <header className="bg-white border-b border-slate-200 shadow-xs py-3 px-4 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
-          {/* Logo & Org Name */}
+          {/* Logo & Entity Name */}
           <div className="flex items-center space-x-3 sm:space-x-4">
             <div className="relative w-12 h-12 sm:w-14 sm:h-14 p-1 bg-white rounded border border-slate-200 shadow-xs flex items-center justify-center shrink-0">
               <Image
@@ -206,29 +225,29 @@ export default function LandingPage() {
             <div>
               <div className="flex items-center space-x-2">
                 <h1 className="text-xl sm:text-2xl font-black text-[#0F294A] tracking-tight leading-none">
-                  Chennai Petroleum Corporation Limited
+                  {t.cpclFullName}
                 </h1>
-                <span className="hidden lg:inline-block bg-blue-100 text-[#0F294A] text-[10px] font-bold px-2 py-0.5 rounded">
-                  A Group Company of IndianOil
+                <span className="hidden lg:inline-block bg-blue-50 text-[#0F294A] border border-blue-200 text-[10px] font-bold px-2 py-0.5 rounded">
+                  {t.cpclGroupTag}
                 </span>
               </div>
               <p className="text-xs font-semibold text-slate-600 mt-0.5">
-                BharatTender Shield — GeM Procurement Compliance & AI Verification System
+                {t.platformSubtitle}
               </p>
             </div>
           </div>
 
-          {/* Search Bar & Quick Actions */}
+          {/* Search Bar & Action */}
           <div className="flex items-center space-x-3 w-full lg:w-auto">
-            <div className="relative flex-1 lg:w-72">
+            <div className="relative flex-1 lg:w-80">
               <input
                 type="text"
-                placeholder="Search Tenders, Rules, GSTIN..."
+                placeholder={t.searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-1.5 text-xs bg-slate-100 border border-slate-300 rounded-md focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#0F294A] transition-all"
+                className="w-full pl-9 pr-4 py-2 text-xs bg-slate-100 border border-slate-300 rounded-md focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#0F294A] transition-all"
               />
-              <Search className="w-4 h-4 text-slate-400 absolute left-2.5 top-2" />
+              <Search className="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5" />
             </div>
 
             <Link
@@ -236,81 +255,82 @@ export default function LandingPage() {
               className="bg-[#0F294A] hover:bg-blue-900 text-white text-xs font-semibold px-4 py-2 rounded-md transition-colors flex items-center space-x-1.5 shrink-0 shadow-xs"
             >
               <UserCheck className="w-4 h-4" />
-              <span>Officer / Vendor Sign In</span>
+              <span>{t.signInButton}</span>
             </Link>
           </div>
         </div>
 
-        {/* 3. NAVIGATION BAR */}
+        {/* 3. NAVIGATION BAR (Clean, Instant, No Lag) */}
         <div className="max-w-7xl mx-auto mt-3 border-t border-slate-100 pt-2 flex flex-wrap items-center justify-between gap-2 text-xs font-semibold">
-          <div className="flex flex-wrap items-center space-x-1 sm:space-x-4 text-slate-700">
-            <Link href="/" className="bg-[#0F294A] text-white px-3 py-1.5 rounded-md font-bold">
-              Home
+          <nav className="flex flex-wrap items-center space-x-1 sm:space-x-3 text-slate-700">
+            <Link href="/" className="bg-[#0F294A] text-white px-3 py-1.5 rounded-md font-bold transition-colors">
+              {t.navHome}
             </Link>
             <Link href="#tenders" className="hover:text-[#0F294A] px-2.5 py-1.5 rounded transition-colors">
-              Active Tenders
+              {t.navTenders}
             </Link>
             <Link href="#verification" className="hover:text-[#0F294A] px-2.5 py-1.5 rounded transition-colors">
-              AI Verification Engine
+              {t.navVerification}
             </Link>
             <Link href="#quicklinks" className="hover:text-[#0F294A] px-2.5 py-1.5 rounded transition-colors">
-              Quick Links & Services
+              {t.navQuickLinks}
             </Link>
             <Link href="/audit" className="hover:text-[#0F294A] px-2.5 py-1.5 rounded transition-colors flex items-center space-x-1">
               <Shield className="w-3.5 h-3.5 text-orange-600 inline" />
-              <span>SHA-256 Audit Vault</span>
+              <span>{t.navAuditVault}</span>
             </Link>
             <Link href="/login" className="hover:text-[#0F294A] px-2.5 py-1.5 rounded transition-colors">
-              Vendor Registration
+              {t.navVendorReg}
             </Link>
-          </div>
+          </nav>
 
-          <div className="flex items-center space-x-2 text-[11px] text-orange-700 font-bold bg-orange-50 px-2.5 py-1 rounded border border-orange-200">
-            <Flame className="w-3.5 h-3.5 text-orange-600 animate-pulse" />
-            <span>SIH 2026 Live Demo Online</span>
+          {/* Official Clean Production Status */}
+          <div className="flex items-center space-x-2 text-[11px] text-emerald-800 font-semibold bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 inline" />
+            <span>{t.portalStatus}</span>
           </div>
         </div>
       </header>
 
-      {/* 4. HERO SLIDER / CAROUSEL (MeitY Style Announcement Banner) */}
+      {/* 4. HERO SLIDER / CAROUSEL */}
       <section className="relative bg-slate-900 text-white overflow-hidden shadow-md">
-        <div className={`bg-gradient-to-r ${slides[currentSlide].bgGradient} transition-all duration-700 py-12 px-4 sm:px-8`}>
+        <div className={`bg-gradient-to-r ${slideGradients[currentSlide % slideGradients.length]} transition-all duration-700 py-12 px-4 sm:px-8`}>
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
             {/* Carousel Content */}
             <div className="lg:col-span-8 space-y-4">
               <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-orange-300 border border-white/20">
                 <span className="w-2 h-2 rounded-full bg-orange-400 animate-ping" />
-                <span>{slides[currentSlide].badge}</span>
+                <span>{t.slides[currentSlide]?.badge}</span>
               </div>
 
               <div>
                 <p className="text-xs sm:text-sm font-semibold text-slate-300 uppercase tracking-wider">
-                  {slides[currentSlide].subtitle}
+                  {t.slides[currentSlide]?.subtitle}
                 </p>
                 <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight mt-1 leading-tight">
-                  {slides[currentSlide].headline}
+                  {t.slides[currentSlide]?.headline}
                 </h2>
               </div>
 
               <p className="text-xs sm:text-base text-slate-200 leading-relaxed max-w-2xl font-normal">
-                {slides[currentSlide].description}
+                {t.slides[currentSlide]?.description}
               </p>
 
               <div className="pt-2 flex flex-wrap items-center gap-3">
                 <Link
-                  href={slides[currentSlide].actionLink}
+                  href={slideLinks[currentSlide % slideLinks.length]}
                   className="bg-orange-600 hover:bg-orange-500 text-white px-6 py-2.5 rounded-md font-bold text-xs flex items-center space-x-2 transition-all shadow-md group"
                 >
-                  <span>{slides[currentSlide].actionText}</span>
+                  <span>{t.slides[currentSlide]?.actionText}</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
 
                 <Link
-                  href="/login"
+                  href="/audit"
                   className="bg-white/10 hover:bg-white/20 border border-white/30 text-white px-5 py-2.5 rounded-md font-semibold text-xs transition-colors"
                 >
-                  Instant SIH Evaluator Login
+                  {t.navAuditVault}
                 </Link>
               </div>
             </div>
@@ -322,13 +342,13 @@ export default function LandingPage() {
                   <Shield className="w-8 h-8 text-orange-400" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-white text-base">CPCL GeM Verification</h3>
+                  <h3 className="font-bold text-white text-base">CPCL E-Procurement</h3>
                   <p className="text-xs text-slate-300 mt-1">
-                    Powered by AI Rule Engine & Instant GST/Udyam Cross-Matching
+                    Deterministic AI Rule Verification & Cryptographic SHA-256 Logs
                   </p>
                 </div>
                 <div className="pt-2 border-t border-white/10 text-[11px] text-orange-200 font-mono">
-                  {slides[currentSlide].tag}
+                  Notice: CPCL/PROC/2026/089
                 </div>
               </div>
             </div>
@@ -355,7 +375,7 @@ export default function LandingPage() {
 
         {/* Indicators */}
         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-2">
-          {slides.map((_, idx) => (
+          {t.slides.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrentSlide(idx)}
@@ -366,48 +386,54 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 5. NOTICE TICKER / LATEST ANNOUNCEMENTS */}
-      <div className="bg-orange-500 text-white py-2 px-4 text-xs font-semibold flex items-center space-x-3 shadow-inner">
-        <span className="bg-white text-orange-600 px-2 py-0.5 rounded font-bold uppercase text-[10px] shrink-0">
-          Latest Notice
+      {/* 5. NOTICE TICKER */}
+      <div className="bg-orange-600 text-white py-2 px-4 text-xs font-semibold flex items-center space-x-3 shadow-inner">
+        <span className="bg-white text-orange-700 px-2 py-0.5 rounded font-bold uppercase text-[10px] shrink-0">
+          Official Notice
         </span>
         <div className="overflow-hidden whitespace-nowrap w-full">
           <div className="animate-marquee inline-block font-medium">
-            🔔 CPCL GEM-DEMO-2026-001 Tender Released • Mandatory AI Bidder Compliance Verification Active • Register as New Vendor or Access Officer Portal via SIH Demo Access •
+            {t.noticeTicker}
           </div>
         </div>
       </div>
 
-      {/* 6. MAIN CONTENT SECTION: TENDERS & QUICK LINKS */}
+      {/* 6. MAIN CONTENT SECTION */}
       <main className="max-w-7xl mx-auto px-4 py-8 space-y-10">
 
-        {/* GRID: LIVE TENDERS + QUICK LINKS SIDEBAR */}
+        {/* GRID: LIVE TENDERS + QUICK SERVICES SIDEBAR */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
-          {/* LEFT 8 COLS: ACTIVE TENDERS TABLE */}
+          {/* LEFT 8 COLS: ACTIVE TENDERS */}
           <div className="lg:col-span-8 space-y-6" id="tenders">
             <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-3">
               <div>
                 <h2 className="text-xl font-extrabold text-[#0F294A] flex items-center space-x-2">
                   <FileText className="w-5 h-5 text-orange-600" />
-                  <span>Active E-Procurement Tenders</span>
+                  <span>{t.activeTendersTitle}</span>
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Chennai Petroleum Corporation Limited (CPCL) — GeM Integrated Notices
+                  {t.activeTendersSubtitle}
                 </p>
               </div>
 
               {/* Category Filter */}
               <div className="flex items-center space-x-1 text-xs">
-                {["all", "Equipment", "Services", "Safety", "Chemicals"].map((cat) => (
+                {[
+                  { key: "all", label: t.filterAll },
+                  { key: "Equipment", label: t.filterEquipment },
+                  { key: "Services", label: t.filterServices },
+                  { key: "Safety", label: t.filterSafety },
+                  { key: "Chemicals", label: t.filterChemicals },
+                ].map((cat) => (
                   <button
-                    key={cat}
-                    onClick={() => setActiveTab(cat)}
-                    className={`px-2.5 py-1 rounded text-xs capitalize transition-colors ${
-                      activeTab === cat ? "bg-[#0F294A] text-white font-bold" : "bg-slate-200 text-slate-700 hover:bg-slate-300"
+                    key={cat.key}
+                    onClick={() => setActiveTab(cat.key)}
+                    className={`px-2.5 py-1 rounded text-xs transition-colors ${
+                      activeTab === cat.key ? "bg-[#0F294A] text-white font-bold" : "bg-slate-200 text-slate-700 hover:bg-slate-300"
                     }`}
                   >
-                    {cat}
+                    {cat.label}
                   </button>
                 ))}
               </div>
@@ -416,7 +442,7 @@ export default function LandingPage() {
             {/* Tender List */}
             <div className="space-y-3">
               {tenders
-                .filter((t) => activeTab === "all" || t.category === activeTab)
+                .filter((tender) => activeTab === "all" || tender.category === activeTab)
                 .map((tender) => (
                   <div
                     key={tender.id}
@@ -440,9 +466,9 @@ export default function LandingPage() {
                       </h3>
 
                       <div className="flex items-center space-x-4 text-xs text-slate-600 pt-1">
-                        <span>Estimated Value: <b className="text-slate-900">{tender.value}</b></span>
+                        <span>{t.estimatedValue}: <b className="text-slate-900">{tender.value}</b></span>
                         <span>•</span>
-                        <span>Submission Deadline: <b className="text-orange-700">{tender.deadline}</b></span>
+                        <span>{t.submissionDeadline}: <b className="text-orange-700">{tender.deadline}</b></span>
                       </div>
                     </div>
 
@@ -451,7 +477,7 @@ export default function LandingPage() {
                         href="/login"
                         className="w-full sm:w-auto bg-[#0F294A] hover:bg-blue-900 text-white text-xs font-semibold px-3.5 py-2 rounded flex items-center justify-center space-x-1 transition-colors"
                       >
-                        <span>Apply & Verify</span>
+                        <span>{t.applyAndVerify}</span>
                         <ArrowRight className="w-3.5 h-3.5" />
                       </Link>
                     </div>
@@ -462,29 +488,29 @@ export default function LandingPage() {
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-center justify-between text-xs text-slate-700">
               <div className="flex items-center space-x-2">
                 <CheckCircle className="w-4 h-4 text-blue-700 shrink-0" />
-                <span>All tender bids are verified using <b>BharatTender Shield Deterministic Rules Engine</b>.</span>
+                <span>{t.ruleEngineNotice}</span>
               </div>
               <Link href="/login" className="text-[#0F294A] font-bold hover:underline shrink-0 ml-2">
-                View Verification Manual →
+                {t.viewManual}
               </Link>
             </div>
           </div>
 
-          {/* RIGHT 4 COLS: QUICK LINKS & USER PORTAL ACCESS */}
+          {/* RIGHT 4 COLS: QUICK SERVICES & PORTAL ACCESS */}
           <div className="lg:col-span-4 space-y-6" id="quicklinks">
             
-            {/* Quick Demo Login Card */}
+            {/* Enterprise Portal Access Card */}
             <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs space-y-4">
               <div className="flex items-center space-x-2 border-b border-slate-100 pb-3">
                 <UserCheck className="w-5 h-5 text-[#0F294A]" />
                 <div>
-                  <h3 className="font-bold text-slate-900 text-sm">Instant Demo Portal Access</h3>
-                  <p className="text-[11px] text-slate-500">Smart India Hackathon 2026 Evaluation</p>
+                  <h3 className="font-bold text-slate-900 text-sm">{t.instantAccessTitle}</h3>
+                  <p className="text-[11px] text-slate-500">{t.instantAccessSubtitle}</p>
                 </div>
               </div>
 
               <p className="text-xs text-slate-600">
-                Log in to experience live procurement verification, discrepancy flagging, and evidence split-viewing:
+                {t.instantAccessDesc}
               </p>
 
               <div className="space-y-2">
@@ -492,7 +518,7 @@ export default function LandingPage() {
                   href="/login"
                   className="w-full bg-[#0F294A] hover:bg-blue-900 text-white text-xs font-semibold py-2.5 px-3 rounded flex items-center justify-between transition-colors shadow-xs"
                 >
-                  <span>Sign In as Procurement Officer</span>
+                  <span>{t.officerSignIn}</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
 
@@ -500,7 +526,7 @@ export default function LandingPage() {
                   href="/login"
                   className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold py-2.5 px-3 rounded flex items-center justify-between transition-colors"
                 >
-                  <span>Sign In as Bidder A (Compliant)</span>
+                  <span>{t.bidderASignIn}</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
 
@@ -508,7 +534,7 @@ export default function LandingPage() {
                   href="/login"
                   className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold py-2.5 px-3 rounded flex items-center justify-between transition-colors"
                 >
-                  <span>Sign In as Bidder B (Discrepant)</span>
+                  <span>{t.bidderBSignIn}</span>
                   <ArrowRight className="w-4 h-4 text-orange-600" />
                 </Link>
               </div>
@@ -518,7 +544,7 @@ export default function LandingPage() {
             <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs space-y-3">
               <h3 className="font-bold text-slate-900 text-sm border-b border-slate-100 pb-2 flex items-center space-x-2">
                 <BookOpen className="w-4 h-4 text-orange-600" />
-                <span>Quick Links & Services</span>
+                <span>{t.quickServicesTitle}</span>
               </h3>
 
               <ul className="space-y-2 text-xs font-medium text-slate-700">
@@ -526,7 +552,7 @@ export default function LandingPage() {
                   <Link href="/audit" className="flex items-center justify-between p-2 rounded hover:bg-slate-50 transition-colors">
                     <span className="flex items-center space-x-2">
                       <Shield className="w-4 h-4 text-blue-600" />
-                      <span>Cryptographic Audit Vault</span>
+                      <span>{t.cryptographicAudit}</span>
                     </span>
                     <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
                   </Link>
@@ -535,7 +561,7 @@ export default function LandingPage() {
                   <Link href="/officer/tenders" className="flex items-center justify-between p-2 rounded hover:bg-slate-50 transition-colors">
                     <span className="flex items-center space-x-2">
                       <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
-                      <span>Tender Compliance Compiler</span>
+                      <span>{t.complianceCompiler}</span>
                     </span>
                     <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
                   </Link>
@@ -544,7 +570,7 @@ export default function LandingPage() {
                   <Link href="/bidder/apply" className="flex items-center justify-between p-2 rounded hover:bg-slate-50 transition-colors">
                     <span className="flex items-center space-x-2">
                       <UserPlus className="w-4 h-4 text-orange-600" />
-                      <span>New Vendor Registration</span>
+                      <span>{t.newVendorReg}</span>
                     </span>
                     <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
                   </Link>
@@ -553,7 +579,7 @@ export default function LandingPage() {
                   <Link href="/login" className="flex items-center justify-between p-2 rounded hover:bg-slate-50 transition-colors">
                     <span className="flex items-center space-x-2">
                       <HelpCircle className="w-4 h-4 text-purple-600" />
-                      <span>Vendor Helpdesk & Guidelines</span>
+                      <span>{t.vendorHelpdesk}</span>
                     </span>
                     <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
                   </Link>
@@ -565,14 +591,14 @@ export default function LandingPage() {
 
         </div>
 
-        {/* 7. FEATURES & COMPLIANCE VERIFICATION HIGHLIGHTS */}
+        {/* 7. ARCHITECTURE & COMPLIANCE PILLARS */}
         <div className="pt-8 border-t border-slate-200" id="verification">
           <div className="text-center max-w-3xl mx-auto space-y-2 mb-8">
             <h2 className="text-2xl font-black text-[#0F294A]">
-              BharatTender Shield Platform Architecture
+              {t.architectureTitle}
             </h2>
             <p className="text-xs sm:text-sm text-slate-600">
-              Ensuring 100% transparent, evidence-backed government procurement verification with human-in-the-loop governance.
+              {t.architectureSubtitle}
             </p>
           </div>
 
@@ -581,9 +607,9 @@ export default function LandingPage() {
               <div className="w-10 h-10 bg-blue-50 text-blue-700 rounded-md flex items-center justify-center font-bold">
                 <Cpu className="w-5 h-5" />
               </div>
-              <h3 className="font-bold text-slate-900 text-sm">Deterministic Rule Extraction</h3>
+              <h3 className="font-bold text-slate-900 text-sm">{t.pillar1Title}</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Tender-to-Rule engine automatically parses qualification criteria (GSTIN validity, turnover thresholds, Udyam MSME date ranges) into executable validation pipelines.
+                {t.pillar1Desc}
               </p>
             </div>
 
@@ -591,9 +617,9 @@ export default function LandingPage() {
               <div className="w-10 h-10 bg-emerald-50 text-emerald-700 rounded-md flex items-center justify-center font-bold">
                 <CheckCircle2 className="w-5 h-5" />
               </div>
-              <h3 className="font-bold text-slate-900 text-sm">Evidence Split-Viewer</h3>
+              <h3 className="font-bold text-slate-900 text-sm">{t.pillar2Title}</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Procurement Officers inspect original PDF document evidence side-by-side with extracted data, confidence scores, and rule verification outputs.
+                {t.pillar2Desc}
               </p>
             </div>
 
@@ -601,9 +627,9 @@ export default function LandingPage() {
               <div className="w-10 h-10 bg-orange-50 text-orange-700 rounded-md flex items-center justify-center font-bold">
                 <Shield className="w-5 h-5" />
               </div>
-              <h3 className="font-bold text-slate-900 text-sm">SHA-256 Tamper-Evident Logs</h3>
+              <h3 className="font-bold text-slate-900 text-sm">{t.pillar3Title}</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Every officer approval, override, and bidder clarification response is chained into an immutable SHA-256 cryptographic audit trail for zero post-bid tampering.
+                {t.pillar3Desc}
               </p>
             </div>
           </div>
@@ -611,7 +637,7 @@ export default function LandingPage() {
 
       </main>
 
-      {/* 8. OFFICIAL GOVERNMENT PORTAL FOOTER */}
+      {/* 8. OFFICIAL FOOTER */}
       <footer className="bg-[#0B1E36] text-slate-400 text-xs py-10 border-t-4 border-orange-500 mt-12">
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
           
@@ -621,50 +647,50 @@ export default function LandingPage() {
                 <Image src="/logo.jpg" alt="Logo" width={36} height={36} className="object-contain" />
               </div>
               <div>
-                <h4 className="font-bold text-white text-sm">CPCL Portal</h4>
-                <p className="text-[11px] text-slate-400">Chennai Petroleum Corp Ltd</p>
+                <h4 className="font-bold text-white text-sm">CPCL E-Procurement</h4>
+                <p className="text-[11px] text-slate-400">Chennai Petroleum Corporation Ltd</p>
               </div>
             </div>
             <p className="text-[11px] leading-relaxed text-slate-400">
-              A Group Company of IndianOil under the Ministry of Petroleum & Natural Gas, Government of India.
+              {t.footerAbout}
             </p>
           </div>
 
           <div>
-            <h5 className="font-bold text-white text-xs uppercase tracking-wider mb-3">Quick Navigation</h5>
+            <h5 className="font-bold text-white text-xs uppercase tracking-wider mb-3">{t.footerQuickNav}</h5>
             <ul className="space-y-1.5 text-[11px]">
-              <li><Link href="/" className="hover:text-white">CPCL Home</Link></li>
-              <li><Link href="#tenders" className="hover:text-white">Live E-Procurement Notices</Link></li>
-              <li><Link href="/audit" className="hover:text-white">SHA-256 Audit Trail Vault</Link></li>
-              <li><Link href="/login" className="hover:text-white">Vendor Registration & Sign In</Link></li>
+              <li><Link href="/" className="hover:text-white">{t.navHome}</Link></li>
+              <li><Link href="#tenders" className="hover:text-white">{t.navTenders}</Link></li>
+              <li><Link href="/audit" className="hover:text-white">{t.navAuditVault}</Link></li>
+              <li><Link href="/login" className="hover:text-white">{t.signInButton}</Link></li>
             </ul>
           </div>
 
           <div>
-            <h5 className="font-bold text-white text-xs uppercase tracking-wider mb-3">Government Portals</h5>
+            <h5 className="font-bold text-white text-xs uppercase tracking-wider mb-3">{t.footerGovtPortals}</h5>
             <ul className="space-y-1.5 text-[11px]">
               <li><a href="https://gem.gov.in" target="_blank" rel="noreferrer" className="hover:text-white">Government e-Marketplace (GeM)</a></li>
               <li><a href="https://mopng.gov.in" target="_blank" rel="noreferrer" className="hover:text-white">Ministry of Petroleum & Natural Gas</a></li>
-              <li><a href="https://cpcl.co.in" target="_blank" rel="noreferrer" className="hover:text-white">CPCL Official Portal</a></li>
+              <li><a href="https://cpcl.co.in" target="_blank" rel="noreferrer" className="hover:text-white">CPCL Official Corporate Portal</a></li>
               <li><a href="https://india.gov.in" target="_blank" rel="noreferrer" className="hover:text-white">National Portal of India</a></li>
             </ul>
           </div>
 
           <div>
-            <h5 className="font-bold text-white text-xs uppercase tracking-wider mb-3">SIH Hackathon 2026</h5>
+            <h5 className="font-bold text-white text-xs uppercase tracking-wider mb-3">Security & Compliance</h5>
             <p className="text-[11px] leading-relaxed text-slate-400 mb-2">
-              Developed for Smart India Hackathon 2026 • Problem Statement 26100 (GeM Procurement Compliance Engine).
+              All bid evaluations and qualification assessments are cryptographically verified using SHA-256 hash chains.
             </p>
-            <p className="text-[10px] text-orange-400 font-mono">
-              Status: Operational & Tested
+            <p className="text-[10px] text-emerald-400 font-mono">
+              Integrity Status: Active & Secured
             </p>
           </div>
 
         </div>
 
         <div className="max-w-7xl mx-auto px-4 mt-8 pt-4 border-t border-slate-800 flex flex-wrap justify-between items-center text-[11px] text-slate-500">
-          <p>© 2026 Chennai Petroleum Corporation Limited (CPCL) & BharatTender Shield. All Rights Reserved.</p>
-          <p>Designed in alignment with Government of India Web Guidelines (GIGW).</p>
+          <p>{t.footerCopyright}</p>
+          <p>{t.footerGIGW}</p>
         </div>
       </footer>
     </div>
