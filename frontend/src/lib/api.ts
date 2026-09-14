@@ -248,4 +248,22 @@ export const api = {
       method: "POST",
     });
   },
+
+  registerUser: async (data: {
+    email: string;
+    password: string;
+    full_name: string;
+    role: string;
+    organization?: string;
+    company_name?: string;
+    gstin?: string;
+    pan?: string;
+    udyam_number?: string;
+  }) => {
+    return fetchWithAuth("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+  },
 };
