@@ -220,8 +220,28 @@ export const api = {
     return fetchWithAuth(`/api/reports/${applicationId}/preview`);
   },
 
-  getReportDownloadUrl: (applicationId: number) => {
-    return `${API_BASE}/api/reports/${applicationId}/download`;
+  downloadReport: async (applicationId: number) => {
+    const token = getAuthToken();
+    const headers: Record<string, string> = {};
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+
+    const res = await fetch(`${API_BASE}/api/reports/${applicationId}/download`, {
+      headers,
+    });
+    
+    if (!res.ok) {
+      throw new Error(await res.text());
+    }
+    
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `Compliance_Report_APP_${applicationId}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   },
 
   // Notifications
