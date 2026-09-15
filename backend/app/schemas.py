@@ -39,9 +39,46 @@ class UserResponse(BaseModel):
     organization: Optional[str] = None
     is_active: bool
     created_at: datetime
+    officer_id: Optional[str] = None
+    phone: Optional[str] = None
+    designation: Optional[str] = None
+    bidder_profile: Optional[Any] = None
 
     class Config:
         from_attributes = True
+
+# Officer Admin Creation Schema
+class OfficerCreateRequest(BaseModel):
+    full_name: str
+    officer_id: str
+    official_email: str
+    phone: str
+    department: str
+    designation: str
+    username: str
+    password: str
+    status: str = "ACTIVE" # ACTIVE, INACTIVE, SUSPENDED
+
+# Bidder Admin Creation Schema
+class BidderCreateRequest(BaseModel):
+    company_name: str
+    authorized_person: str
+    email: str
+    phone: str
+    gstin: str
+    pan: str
+    udyam_number: Optional[str] = None
+    address: Optional[str] = None
+    username: str
+    password: str
+    status: str = "ACTIVE"
+
+class UserStatusUpdateRequest(BaseModel):
+    status: str # ACTIVE, INACTIVE, SUSPENDED
+
+class UserPasswordResetRequest(BaseModel):
+    new_password: str
+
 
 # Bidder Profile Schemas
 class BidderProfileResponse(BaseModel):
