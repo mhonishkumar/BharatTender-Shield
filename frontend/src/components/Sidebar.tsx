@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { useSidebar } from "@/context/SidebarContext";
 import {
   LayoutDashboard,
   FileText,
@@ -21,7 +22,8 @@ import {
   LogOut,
   UserPlus,
   ShieldCheck,
-  User
+  User,
+  X
 } from "lucide-react";
 
 interface NavItem {
@@ -34,6 +36,7 @@ interface NavItem {
 export const Sidebar: React.FC = () => {
   const pathname = usePathname();
   const { role, logout } = useAuth();
+  const { isOpen, setIsOpen } = useSidebar();
 
   // Navigation configurations per role
   const officerNav: NavItem[] = [
@@ -74,9 +77,21 @@ export const Sidebar: React.FC = () => {
 
   const currentNav = role === "BIDDER" ? bidderNav : (role === "ADMIN" ? adminNav : officerNav);
 
-  return (
-    <aside className="w-[240px] bg-white border-r border-slate-200 flex flex-col justify-between flex-shrink-0 min-h-[calc(100vh-4rem)]">
+  const sidebarContent = (
+    <div className="flex flex-col justify-between h-full">
       <div className="py-4">
+        {/* Mobile Header with close button */}
+        <div className="flex md:hidden items-center justify-between px-4 pb-3 mb-2 border-b border-slate-100">
+          <span className="font-bold text-xs text-[#0F294A]">Menu Navigation</span>
+          <button
+            onClick={() => setIsOpen(false)}
+            className="p-1.5 text-slate-500 hover:text-slate-900 rounded-md hover:bg-slate-100"
+            aria-label="Close menu"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
         {/* Role Section Title */}
         <div className="px-4 mb-3">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
@@ -94,6 +109,7 @@ export const Sidebar: React.FC = () => {
               <Link
                 key={item.label}
                 href={item.href}
+                onClick={() => setIsOpen(false)}
                 className={`flex items-center justify-between px-3 py-2 rounded-md text-xs font-medium transition-colors ${
                   isActive
                     ? "bg-[#0F294A] text-white shadow-xs"
@@ -134,13 +150,41 @@ export const Sidebar: React.FC = () => {
         </div>
 
         <button
-          onClick={logout}
+          onClick={() => {
+            setIsOpen(false);
+            logout();
+          }}
           className="w-full flex items-center justify-center space-x-2 px-3 py-1.5 rounded text-xs font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 border border-slate-200 transition-colors"
         >
           <LogOut className="w-3.5 h-3.5" />
           <span>Sign Out</span>
         </button>
       </div>
-    </aside>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Desktop Sidebar (hidden on mobile, visible from md up) */}
+      <aside className="hidden md:flex w-[240px] bg-white border-r border-slate-200 flex-col justify-between flex-shrink-0 min-h-[calc(100vh-4rem)]">
+        {sidebarContent}
+      </aside>
+
+      {/* Mobile Drawer Backdrop & Drawer */}
+      {isOpen && (
+        <div className="fixed inset-0 z-50 md:hidden flex">
+          {/* Dark backdrop overlay */}
+          <div
+            className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity"
+            onClick={() => setIsOpen(false)}
+          />
+
+          {/* Drawer panel */}
+          <div className="relative w-[280px] max-w-[80vw] bg-white h-full shadow-2xl z-50 flex flex-col">
+            {sidebarContent}
+          </div>
+        </div>
+      )}
+    </>
   );
 };
