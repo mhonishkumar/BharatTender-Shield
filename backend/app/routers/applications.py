@@ -140,9 +140,12 @@ async def upload_document(
     # Save file
     safe_filename = f"{application.application_ref}_{doc_type}_{uuid.uuid4().hex[:8]}{suffix}"
     dest_path = settings.UPLOAD_DIR / safe_filename
-    
-    with open(dest_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+
+    try:
+        with open(dest_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"File save error: {str(e)}")
 
     file_size = os.path.getsize(dest_path)
 
@@ -154,7 +157,7 @@ async def upload_document(
 
     if existing_doc:
         existing_doc.file_name = file.filename
-        existing_doc.file_path = str(dest_path.relative_to(settings.BASE_DIR))
+        existing_doc.file_path = str(dest_path)
         existing_doc.file_size = file_size
         existing_doc.mime_type = file.content_type or "application/octet-stream"
         existing_doc.status = "UPLOADED"
@@ -165,7 +168,7 @@ async def upload_document(
             application_id=application_id,
             doc_type=doc_type,
             file_name=file.filename,
-            file_path=str(dest_path.relative_to(settings.BASE_DIR)),
+            file_path=str(dest_path),
             file_size=file_size,
             mime_type=file.content_type or "application/octet-stream",
             status="UPLOADED",

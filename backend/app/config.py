@@ -9,23 +9,27 @@ except ImportError:
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Use /tmp on cloud deployments (Render sets RENDER=true automatically)
+_IS_CLOUD = bool(os.getenv("RENDER") or os.getenv("DYNO") or os.getenv("CLOUD_ENV"))
+_TMP_DIR = Path("/tmp/bharattender")
+
 class Settings:
     PROJECT_NAME: str = "BharatTender Shield"
     PROJECT_TAGLINE: str = "Every Bid Verified. Every Decision Defensible."
     SIH_STATEMENT: str = "26100 - AI-Powered Integrated Bid Compliance Verification Platform for GeM Procurement"
-    
+
     SECRET_KEY: str = os.getenv("SECRET_KEY", "bharattendershield-super-secret-key-2026-sih")
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 # 24 hours
-    
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
+
     DATABASE_URL: str = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR}/bharattender_shield.db")
-    
+
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
-    
-    UPLOAD_DIR: Path = BASE_DIR / "uploads"
-    REPORTS_DIR: Path = BASE_DIR / "generated_reports"
+
+    UPLOAD_DIR: Path = (_TMP_DIR / "uploads") if _IS_CLOUD else (BASE_DIR / "uploads")
+    REPORTS_DIR: Path = (_TMP_DIR / "reports") if _IS_CLOUD else (BASE_DIR / "generated_reports")
     LOGO_PATH: Path = BASE_DIR / "logo.jpg"
-    
+
     # Brand Theme Colors
     COLOR_PRIMARY_NAVY: str = "#0F294A"
     COLOR_SECONDARY_GREEN: str = "#15803D"
