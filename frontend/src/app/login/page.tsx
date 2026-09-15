@@ -135,51 +135,6 @@ export default function LoginPage() {
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </form>
-
-              {/* SIH Live Demo Quick Logins */}
-              <div className="pt-4 border-t border-slate-200">
-                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-2.5 text-center">
-                  Instant Demo Access (SIH Evaluation)
-                </span>
-                
-                <div className="space-y-2">
-                  <button
-                    type="button"
-                    onClick={() => demoLogin("officer")}
-                    className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800 text-xs font-medium py-2 px-3 rounded flex items-center justify-between transition-colors"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <UserCheck className="w-4 h-4 text-[#0F294A]" />
-                      <span>Continue as <b>Demo Officer</b> (Verma, IPoS)</span>
-                    </div>
-                    <span className="text-[10px] text-blue-700 font-semibold bg-blue-50 px-1.5 py-0.5 rounded">Officer</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => demoLogin("bidder")}
-                    className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800 text-xs font-medium py-2 px-3 rounded flex items-center justify-between transition-colors"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                      <span>Continue as <b>Demo Bidder A</b> (ABC Tech - Compliant)</span>
-                    </div>
-                    <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded">Bidder</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => demoLogin("bidder_b")}
-                    className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800 text-xs font-medium py-2 px-3 rounded flex items-center justify-between transition-colors"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <ShieldAlert className="w-4 h-4 text-amber-600" />
-                      <span>Continue as <b>Demo Bidder B</b> (DEF Infra - Discrepancies)</span>
-                    </div>
-                    <span className="text-[10px] text-amber-700 font-semibold bg-amber-50 px-1.5 py-0.5 rounded">Bidder</span>
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
         </div>
