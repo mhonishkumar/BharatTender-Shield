@@ -52,8 +52,9 @@ def get_application(
         raise HTTPException(status_code=404, detail="Application not found")
 
     # If bidder, check ownership
-    if current_user.role == "BIDDER" and application.bidder_id != current_user.bidder_profile.id:
-        raise HTTPException(status_code=403, detail="Access denied")
+    if current_user.role == "BIDDER":
+        if not current_user.bidder_profile or application.bidder_id != current_user.bidder_profile.id:
+            raise HTTPException(status_code=403, detail="Access denied")
 
     return application
 
@@ -126,8 +127,9 @@ async def upload_document(
         raise HTTPException(status_code=404, detail="Application not found")
 
     # Verify authorization
-    if current_user.role == "BIDDER" and application.bidder_id != current_user.bidder_profile.id:
-        raise HTTPException(status_code=403, detail="Access denied")
+    if current_user.role == "BIDDER":
+        if not current_user.bidder_profile or application.bidder_id != current_user.bidder_profile.id:
+            raise HTTPException(status_code=403, detail="Access denied")
 
     # Validate file extension
     allowed_exts = {".pdf", ".png", ".jpg", ".jpeg"}

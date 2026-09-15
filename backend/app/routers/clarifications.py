@@ -71,7 +71,7 @@ def reply_to_clarification(
         raise HTTPException(status_code=404, detail="Clarification not found")
 
     application = clarification.application
-    if application.bidder_id != current_user.bidder_profile.id:
+    if not current_user.bidder_profile or application.bidder_id != current_user.bidder_profile.id:
         raise HTTPException(status_code=403, detail="Access denied")
 
     clarification.bidder_reply = reply_data.bidder_reply

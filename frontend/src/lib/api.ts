@@ -1,4 +1,5 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8001";
+const RAW_API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8001";
+export const API_BASE = RAW_API_URL.trim().replace(/\/+$/, "");
 
 export const getAuthToken = (): string | null => {
   if (typeof window !== "undefined") {
@@ -246,24 +247,6 @@ export const api = {
   toggleUserActive: async (userId: number) => {
     return fetchWithAuth(`/api/admin/users/${userId}/toggle-active`, {
       method: "POST",
-    });
-  },
-
-  registerUser: async (data: {
-    email: string;
-    password: string;
-    full_name: string;
-    role: string;
-    organization?: string;
-    company_name?: string;
-    gstin?: string;
-    pan?: string;
-    udyam_number?: string;
-  }) => {
-    return fetchWithAuth("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
     });
   },
 };
