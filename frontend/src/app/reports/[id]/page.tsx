@@ -74,15 +74,13 @@ export default function ReportPage() {
               <span>Back to Verification Inspector</span>
             </Link>
 
-            <a
-              href={api.getReportDownloadUrl(applicationId)}
-              target="_blank"
-              rel="noreferrer"
+            <button
+              onClick={() => api.downloadReport(applicationId).catch(err => alert("Download failed: " + err.message))}
               className="bg-[#0F294A] hover:bg-blue-900 text-white px-4 py-2 rounded text-xs font-semibold flex items-center space-x-2 shadow-xs transition-colors"
             >
               <Download className="w-4 h-4" />
               <span>Generate & Download Official PDF</span>
-            </a>
+            </button>
           </div>
 
           {/* Report Preview Document Canvas */}

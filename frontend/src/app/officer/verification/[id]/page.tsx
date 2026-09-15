@@ -241,15 +241,13 @@ export default function BidderVerificationPage() {
                 <span>Final Decision</span>
               </button>
 
-              <a
-                href={api.getReportDownloadUrl(applicationId)}
-                target="_blank"
-                rel="noreferrer"
+              <button
+                onClick={() => api.downloadReport(applicationId).catch(err => alert("Download failed: " + err.message))}
                 className="bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 px-3.5 py-2.5 rounded-md text-xs font-medium flex items-center space-x-1.5 transition-colors"
               >
                 <FileSpreadsheet className="w-3.5 h-3.5 text-blue-700" />
                 <span>Download PDF Report</span>
-              </a>
+              </button>
             </div>
           </div>
 
