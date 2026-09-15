@@ -64,7 +64,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(userObj);
       setAuthToken(data.access_token, data.role, userObj);
 
-      router.push("/dashboard");
+      const targetRoute = data.role === "ADMIN" ? "/admin" : (data.role === "BIDDER" ? "/bidder/verification" : "/dashboard");
+      router.push(targetRoute);
     } finally {
       setIsLoading(false);
     }
@@ -85,7 +86,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(userObj);
       setAuthToken(data.access_token, data.role, userObj);
 
-      router.push("/dashboard");
+      const targetRoute = data.role === "ADMIN" ? "/admin" : (data.role === "BIDDER" ? "/bidder/verification" : "/dashboard");
+      router.push(targetRoute);
     } finally {
       setIsLoading(false);
     }

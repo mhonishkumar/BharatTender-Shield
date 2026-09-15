@@ -260,8 +260,49 @@ export const api = {
     return fetchWithAuth("/api/admin/stats");
   },
 
-  getAdminUsers: async () => {
-    return fetchWithAuth("/api/admin/users");
+  getAdminUsers: async (params?: { role?: string; status?: string; search?: string }) => {
+    const query = new URLSearchParams();
+    if (params?.role) query.append("role_filter", params.role);
+    if (params?.status) query.append("status_filter", params.status);
+    if (params?.search) query.append("search", params.search);
+    const qStr = query.toString();
+    return fetchWithAuth(`/api/admin/users${qStr ? `?${qStr}` : ""}`);
+  },
+
+  addOfficer: async (data: any) => {
+    return fetchWithAuth("/api/admin/officers", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+  },
+
+  addBidder: async (data: any) => {
+    return fetchWithAuth("/api/admin/bidders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+  },
+
+  updateUserStatus: async (userId: number, status: string) => {
+    return fetchWithAuth(`/api/admin/users/${userId}/status`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
+  },
+
+  resetUserPassword: async (userId: number, new_password: string) => {
+    return fetchWithAuth(`/api/admin/users/${userId}/reset-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ new_password }),
+    });
+  },
+
+  getBidderApplications: async (userId: number) => {
+    return fetchWithAuth(`/api/admin/bidders/${userId}/applications`);
   },
 
   toggleUserActive: async (userId: number) => {
@@ -270,3 +311,4 @@ export const api = {
     });
   },
 };
+

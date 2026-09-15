@@ -18,7 +18,10 @@ import {
   MessageSquare,
   UserCheck,
   Building,
-  LogOut
+  LogOut,
+  UserPlus,
+  ShieldCheck,
+  User
 } from "lucide-react";
 
 interface NavItem {
@@ -57,11 +60,16 @@ export const Sidebar: React.FC = () => {
   ];
 
   const adminNav: NavItem[] = [
-    { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { label: "Users & Roles", href: "/dashboard#users", icon: Users },
+    { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
+    { label: "Users", href: "/admin?tab=users", icon: Users },
+    { label: "Officers", href: "/admin?tab=officers", icon: UserCheck },
+    { label: "Bidders", href: "/admin?tab=bidders", icon: Building },
     { label: "Tenders", href: "/officer/tenders", icon: FileText },
-    { label: "Audit Trail", href: "/audit", icon: History },
-    { label: "System Diagnostics", href: "/dashboard#system", icon: Settings },
+    { label: "Verification Engine", href: "/officer/verification/2", icon: CheckSquare, badge: "Engine" },
+    { label: "Audit Logs", href: "/audit", icon: History, badge: "SHA-256" },
+    { label: "Reports", href: "/reports/2", icon: FileSpreadsheet },
+    { label: "Settings", href: "/admin?tab=settings", icon: Settings },
+    { label: "Profile", href: "/admin?tab=profile", icon: User },
   ];
 
   const currentNav = role === "BIDDER" ? bidderNav : (role === "ADMIN" ? adminNav : officerNav);
