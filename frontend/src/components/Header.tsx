@@ -4,11 +4,13 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
+import { useSidebar } from "@/context/SidebarContext";
 import { api } from "@/lib/api";
-import { Search, Bell, LogOut, ShieldCheck, ChevronDown, CheckCircle2, AlertCircle } from "lucide-react";
+import { Search, Bell, LogOut, Menu, ShieldCheck, ChevronDown, CheckCircle2, AlertCircle } from "lucide-react";
 
 export const Header: React.FC<{ onSearch?: (query: string) => void }> = ({ onSearch }) => {
   const { user, role, logout } = useAuth();
+  const { toggle } = useSidebar();
   const [notifications, setNotifications] = useState<any[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -53,11 +55,19 @@ export const Header: React.FC<{ onSearch?: (query: string) => void }> = ({ onSea
   }[role || ""] || role || "Guest";
 
   return (
-    <header className="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-4 sm:px-6 sticky top-0 z-40">
-      {/* Left: Brand Identity with official logo */}
-      <div className="flex items-center space-x-3">
-        <Link href="/dashboard" className="flex items-center space-x-2.5 group">
-          <div className="relative w-9 h-9 flex-shrink-0">
+    <header className="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-3 sm:px-6 sticky top-0 z-40">
+      {/* Left: Hamburger menu on mobile + Brand Identity */}
+      <div className="flex items-center space-x-2 sm:space-x-3">
+        <button
+          onClick={toggle}
+          className="md:hidden p-2 text-slate-600 hover:text-[#0F294A] hover:bg-slate-100 rounded-md transition-colors"
+          aria-label="Open menu"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
+        <Link href="/dashboard" className="flex items-center space-x-2 sm:space-x-2.5 group">
+          <div className="relative w-8 h-8 sm:w-9 sm:h-9 flex-shrink-0">
             <Image
               src="/logo.jpg"
               alt="BharatTender Shield Logo"
@@ -68,18 +78,18 @@ export const Header: React.FC<{ onSearch?: (query: string) => void }> = ({ onSea
             />
           </div>
           <div className="flex flex-col">
-            <span className="font-semibold text-base tracking-tight text-[#0F294A] leading-tight group-hover:text-blue-900 transition-colors">
+            <span className="font-semibold text-sm sm:text-base tracking-tight text-[#0F294A] leading-tight group-hover:text-blue-900 transition-colors">
               BharatTender Shield
             </span>
-            <span className="text-[10px] text-slate-500 font-medium leading-none hidden sm:inline">
+            <span className="text-[10px] text-slate-500 font-medium leading-none hidden lg:inline">
               Every Bid Verified. Every Decision Defensible.
             </span>
           </div>
         </Link>
       </div>
 
-      {/* Center: Global Search */}
-      <div className="flex-1 max-w-md mx-4 lg:mx-8">
+      {/* Center: Global Search (Hidden on very small screens, visible from sm up) */}
+      <div className="hidden sm:block flex-1 max-w-xs md:max-w-md mx-2 sm:mx-4 lg:mx-8">
         <div className="relative">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
@@ -93,7 +103,7 @@ export const Header: React.FC<{ onSearch?: (query: string) => void }> = ({ onSea
       </div>
 
       {/* Right: Notifications, Profile, Role badge */}
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center space-x-2 sm:space-x-3">
         {/* Notifications */}
         <div className="relative">
           <button
@@ -108,7 +118,7 @@ export const Header: React.FC<{ onSearch?: (query: string) => void }> = ({ onSea
           </button>
 
           {showNotifications && (
-            <div className="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 text-xs">
+            <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50 text-xs">
               <div className="px-3 py-1.5 border-b border-slate-100 font-semibold text-slate-800 flex justify-between items-center">
                 <span>Notifications ({unreadCount} new)</span>
                 <span className="text-[10px] text-slate-400">SIH Alerts</span>
@@ -142,12 +152,12 @@ export const Header: React.FC<{ onSearch?: (query: string) => void }> = ({ onSea
         </div>
 
         {/* User Pill / Profile */}
-        <div className="flex items-center space-x-2 pl-2 border-l border-slate-200">
+        <div className="flex items-center space-x-1.5 sm:space-x-2 pl-2 border-l border-slate-200">
           <div className="flex flex-col text-right">
-            <span className="text-xs font-semibold text-slate-800 leading-tight">
+            <span className="text-xs font-semibold text-slate-800 leading-tight max-w-[100px] sm:max-w-none truncate">
               {user?.full_name || "Guest"}
             </span>
-            <span className="text-[10px] text-blue-800 font-medium bg-blue-50 px-1.5 py-0.5 rounded mt-0.5 border border-blue-100 inline-block">
+            <span className="text-[9px] sm:text-[10px] text-blue-800 font-medium bg-blue-50 px-1 sm:px-1.5 py-0.5 rounded mt-0.5 border border-blue-100 inline-block">
               {roleLabel}
             </span>
           </div>
