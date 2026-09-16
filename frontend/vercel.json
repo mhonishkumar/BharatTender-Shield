@@ -1,0 +1,14 @@
+{
+  "redirects": [
+    {
+      "source": "/bidder/dashboard",
+      "destination": "/dashboard",
+      "permanent": true
+    },
+    {
+      "source": "/officer/dashboard",
+      "destination": "/dashboard",
+      "permanent": true
+    }
+  ]
+}
