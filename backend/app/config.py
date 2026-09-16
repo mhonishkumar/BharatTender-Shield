@@ -17,12 +17,11 @@ def _get_database_url() -> str:
     url = os.getenv("DATABASE_URL", "").strip()
     if not url:
         return f"sqlite:///{BASE_DIR}/bharattender_shield.db"
-    # Normalize postgres:// to postgresql+psycopg://
+    # If Render or Supabase provides postgres://, normalize to postgresql://
     if url.startswith("postgres://"):
-        url = url.replace("postgres://", "postgresql+psycopg://", 1)
-    elif url.startswith("postgresql://") and not url.startswith("postgresql+"):
-        url = url.replace("postgresql://", "postgresql+psycopg://", 1)
+        url = url.replace("postgres://", "postgresql://", 1)
     return url
+
 
 class Settings:
     PROJECT_NAME: str = "BharatTender Shield"

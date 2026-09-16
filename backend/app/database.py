@@ -12,7 +12,6 @@ def _create_db_engine():
         )
 
     # For PostgreSQL on cloud (Render / Supabase)
-    # Attempt psycopg v3 driver first; if not present, fallback to psycopg2 or standard postgresql
     pool_kwargs = {
         "pool_pre_ping": True,
         "pool_recycle": 300,
@@ -21,20 +20,47 @@ def _create_db_engine():
         "echo": False
     }
 
-    try:
-        return create_engine(db_url, **pool_kwargs)
-    except Exception as err:
-        if "psycopg" in db_url:
-            # Try psycopg2 fallback
-            fallback_url = db_url.replace("postgresql+psycopg://", "postgresql+psycopg2://")
-            try:
-                return create_engine(fallback_url, **pool_kwargs)
-            except Exception:
-                pass
-        raise err
+    # If URL is generic postgresql://, try drivers in order of preference
+    candidate_urls = []
+    if db_url.startswith("postgresql+psycopg://"):
+        candidate_urls = [
+            db_url,
+            db_url.replace("postgresql+psycopg://", "postgresql+psycopg2://"),
+            db_url.replace("postgresql+psycopg://", "postgresql://")
+        ]
+    elif db_url.startswith("postgresql+psycopg2://"):
+        candidate_urls = [
+            db_url,
+            db_url.replace("postgresql+psycopg2://", "postgresql+psycopg://"),
+            db_url.replace("postgresql+psycopg2://", "postgresql://")
+        ]
+    elif db_url.startswith("postgresql://"):
+        candidate_urls = [
+            db_url.replace("postgresql://", "postgresql+psycopg://"),
+            db_url.replace("postgresql://", "postgresql+psycopg2://"),
+            db_url
+        ]
+    else:
+        candidate_urls = [db_url]
+
+    last_error = None
+    for url in candidate_urls:
+        try:
+            eng = create_engine(url, **pool_kwargs)
+            # Test that the dbapi driver can actually be loaded
+            _ = eng.dialect.dbapi
+            return eng
+        except Exception as e:
+            last_error = e
+            continue
+
+    if last_error:
+        raise last_error
+    return create_engine(db_url, **pool_kwargs)
 
 engine = _create_db_engine()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 
 
 
