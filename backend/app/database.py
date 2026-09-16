@@ -23,11 +23,14 @@ def _create_db_engine():
             echo=False,
         )
 
-    # Normalize any PostgreSQL URL to use the psycopg2 driver
-    # psycopg2-binary is confirmed installed on Render
+    # Normalize any PostgreSQL URL to use available driver (psycopg2 or psycopg)
     for prefix in ("postgresql://", "postgres://", "postgresql+psycopg://", "postgresql+psycopg2://"):
         if db_url.startswith(prefix):
-            db_url = db_url.replace(prefix, "postgresql+psycopg2://", 1)
+            try:
+                import psycopg2  # noqa: F401
+                db_url = db_url.replace(prefix, "postgresql+psycopg2://", 1)
+            except ImportError:
+                db_url = db_url.replace(prefix, "postgresql+psycopg://", 1)
             break
 
     logger.info(f"[database] Using driver URL: {db_url}")
