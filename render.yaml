@@ -3,7 +3,7 @@ services:
     name: bharattender-shield-backend
     runtime: python
     rootDir: backend
-    buildCommand: pip install -r requirements.txt && alembic upgrade head || true
+    buildCommand: pip install --upgrade pip && pip install psycopg2-binary && pip install -r requirements.txt && alembic upgrade head || true
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
