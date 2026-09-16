@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useSidebar } from "@/context/SidebarContext";
 import {
@@ -35,6 +35,7 @@ interface NavItem {
 
 export const Sidebar: React.FC = () => {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { role, logout } = useAuth();
   const { isOpen, setIsOpen } = useSidebar();
 
@@ -103,8 +104,24 @@ export const Sidebar: React.FC = () => {
         <nav className="space-y-1 px-2">
           {currentNav.map((item) => {
             const Icon = item.icon;
-            const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href.split("?")[0].split("#")[0]));
+            let isActive = false;
+            const [itemPath, itemQuery] = item.href.split("?");
+            const currentTab = searchParams.get("tab");
 
+            if (itemPath === pathname) {
+              if (itemQuery) {
+                const itemTab = new URLSearchParams(itemQuery).get("tab");
+                isActive = currentTab === itemTab;
+              } else if (itemPath === "/admin") {
+                isActive = !currentTab || currentTab === "dashboard";
+              } else if (itemPath === "/dashboard") {
+                isActive = pathname === "/dashboard";
+              } else {
+                isActive = true;
+              }
+            } else if (itemPath !== "/dashboard" && itemPath !== "/admin" && pathname.startsWith(itemPath)) {
+              isActive = true;
+            }
             return (
               <Link
                 key={item.label}

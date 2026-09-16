@@ -67,7 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (data.role === "ADMIN") {
         router.push("/admin");
       } else if (data.role === "BIDDER") {
-        router.push("/bidder/dashboard");
+        router.push("/dashboard");
       } else {
         router.push("/dashboard");
       }
