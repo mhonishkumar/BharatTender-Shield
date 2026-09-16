@@ -66,12 +66,41 @@ export default function BidderVerificationPage() {
     }
   };
 
-  if (loading || !activeApp) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
         <div className="text-center space-y-2">
           <div className="w-8 h-8 border-2 border-[#0F294A] border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-xs text-slate-500">Loading verification details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!activeApp) {
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
+        <SIHDemoBar />
+        <Header />
+        <div className="flex-1 flex">
+          <Sidebar />
+          <main className="flex-1 p-6 lg:p-8 max-w-7xl mx-auto w-full flex items-center justify-center">
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto">
+                <FileText className="w-8 h-8 text-slate-400" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-[#0F294A]">No Active Applications</h2>
+                <p className="text-xs text-slate-500 mt-1">You have not submitted any applications for verification yet.</p>
+              </div>
+              <Link
+                href="/bidder/apply"
+                className="inline-block bg-[#0F294A] text-white px-4 py-2 rounded text-xs font-semibold hover:bg-blue-900 transition-colors"
+              >
+                Apply for a Tender
+              </Link>
+            </div>
+          </main>
         </div>
       </div>
     );

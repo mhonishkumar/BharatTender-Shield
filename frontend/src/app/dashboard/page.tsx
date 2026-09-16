@@ -52,33 +52,43 @@ export default function DashboardPage() {
   const loadDashboardData = async () => {
     setLoadingData(true);
     try {
-      const [tendersData, appsData] = await Promise.all([
-        api.getTenders(),
-        api.getApplications(),
-      ]);
-      setTenders(tendersData);
-      setApplications(appsData);
+      if (role === "BIDDER") {
+        const [tendersData, appsData] = await Promise.all([
+          api.getBidderTenders(),
+          api.getApplications(), // backend filters automatically by bidder_id if BIDDER
+        ]);
+        setTenders(tendersData);
+        setApplications(appsData);
+      } else {
+        const [tendersData, appsData] = await Promise.all([
+          api.getTenders(),
+          api.getApplications(),
+        ]);
+        setTenders(tendersData);
+        setApplications(appsData);
 
-      if (role === "PROCUREMENT_OFFICER" || role === "ADMIN") {
-        try {
-          const statsData = await api.getAdminStats();
-          setStats({
-            active_tenders: 24, // Preset realistic demo numbers supplemented with db
-            pending_reviews: 17,
-            verified_bidders: 138,
-            high_risk_bidders: 6,
-            ...statsData,
-          });
-        } catch {
-          // fallback to defaults
+        if (role === "PROCUREMENT_OFFICER" || role === "ADMIN") {
+          try {
+            const statsData = await api.getAdminStats();
+            setStats({
+              active_tenders: 0,
+              pending_reviews: 0,
+              verified_bidders: 0,
+              high_risk_bidders: 0,
+              ...statsData,
+            });
+          } catch {
+            // fallback
+          }
         }
       }
     } catch (e) {
-      // ignore
+      console.error(e);
     } finally {
       setLoadingData(false);
     }
   };
+
 
   if (isLoading || !user) {
     return (
@@ -342,12 +352,14 @@ export default function DashboardPage() {
                   <div>
                     <span className="text-xs text-slate-400">Current Application</span>
                     <h3 className="text-sm font-semibold text-[#0F294A]">
-                      Tender: GEM-DEMO-2026-001 (Supply of Industrial Safety Equipment)
+                      Tender: {applications.length > 0 ? applications[0].tender?.title || applications[0].application_ref : "No active applications"}
                     </h3>
                   </div>
-                  <span className="text-xs bg-amber-50 text-amber-700 font-bold px-2.5 py-1 rounded border border-amber-200 mt-2 sm:mt-0">
-                    Verification In Progress
-                  </span>
+                  {applications.length > 0 && (
+                    <span className="text-xs bg-blue-50 text-blue-700 font-bold px-2.5 py-1 rounded border border-blue-200 mt-2 sm:mt-0">
+                      Status: {applications[0].status}
+                    </span>
+                  )}
                 </div>
 
                 {/* Progress Stepper */}
@@ -448,9 +460,9 @@ export default function DashboardPage() {
               {/* Bidder Overview Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="bg-white p-4 rounded-lg border border-slate-200 text-xs">
-                  <span className="text-slate-400 font-medium">Compliance Score</span>
+                  <span className="text-slate-400 font-medium">Latest Compliance Score</span>
                   <div className="text-2xl font-bold text-[#0F294A] mt-1">
-                    {applications[0]?.compliance_score || 59} / 100
+                    {applications.length > 0 ? applications[0].compliance_score : 0} / 100
                   </div>
                   <span className="text-[10px] text-amber-600 font-semibold block mt-1">
                     AI-Assisted Assessment (Decision Support)
@@ -458,22 +470,22 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="bg-white p-4 rounded-lg border border-slate-200 text-xs">
-                  <span className="text-slate-400 font-medium">Submitted Documents</span>
+                  <span className="text-slate-400 font-medium">Total Applications</span>
                   <div className="text-2xl font-bold text-slate-800 mt-1">
-                    {applications[0]?.documents?.length || 3} / 4
+                    {applications.length}
                   </div>
                   <span className="text-[10px] text-slate-500 block mt-1">
-                    1 document required for completeness
+                    Submitted against {tenders.length} assigned tenders
                   </span>
                 </div>
 
                 <div className="bg-white p-4 rounded-lg border border-slate-200 text-xs">
-                  <span className="text-slate-400 font-medium">Officer Clarifications</span>
+                  <span className="text-slate-400 font-medium">Pending Tenders</span>
                   <div className="text-2xl font-bold text-orange-600 mt-1">
-                    {applications[0]?.clarifications?.length || 1}
+                    {tenders.length}
                   </div>
-                  <Link href="/bidder/clarifications" className="text-[10px] text-blue-700 font-semibold hover:underline block mt-1">
-                    Respond to open clarification →
+                  <Link href="/bidder/apply" className="text-[10px] text-blue-700 font-semibold hover:underline block mt-1">
+                    Apply for an assigned tender →
                   </Link>
                 </div>
               </div>
