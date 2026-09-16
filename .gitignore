@@ -35,3 +35,8 @@ out/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Submodules / nested git folders
+demo/
+mk/
+

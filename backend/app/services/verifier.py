@@ -520,7 +520,35 @@ def run_application_verification(db: Session, application_id: int, officer_user_
     application.status = "UNDER_REVIEW" if risk_level == "LOW" else ("CLARIFICATION_REQUESTED" if application.clarifications else "UNDER_REVIEW")
     application.last_verified_at = datetime.utcnow()
 
+    # Save to compliance_scores table
+    existing_score = db.query(models.ComplianceScore).filter(models.ComplianceScore.application_id == application.id).first()
+    if existing_score:
+        existing_score.total_score = total_score
+        existing_score.gst_score = gst_score
+        existing_score.pan_score = pan_score
+        existing_score.udyam_score = udyam_score
+        existing_score.doc_completeness_score = doc_score
+        existing_score.financial_score = fin_score
+        existing_score.consistency_score = consistency_score
+        existing_score.risk_level = risk_level
+        existing_score.calculated_at = datetime.utcnow()
+    else:
+        score_record = models.ComplianceScore(
+            application_id=application.id,
+            total_score=total_score,
+            gst_score=gst_score,
+            pan_score=pan_score,
+            udyam_score=udyam_score,
+            doc_completeness_score=doc_score,
+            financial_score=fin_score,
+            consistency_score=consistency_score,
+            risk_level=risk_level,
+            calculated_at=datetime.utcnow()
+        )
+        db.add(score_record)
+
     # Record SHA-256 Hash Chained Audit Log
+
     record_audit_log(
         db=db,
         action="AI_VERIFICATION_COMPLETED",
