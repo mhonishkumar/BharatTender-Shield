@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
@@ -33,7 +33,7 @@ interface NavItem {
   badge?: string;
 }
 
-export const Sidebar: React.FC = () => {
+const SidebarContent: React.FC = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { role, logout } = useAuth();
@@ -205,3 +205,9 @@ export const Sidebar: React.FC = () => {
     </>
   );
 };
+
+export const Sidebar: React.FC = () => (
+  <Suspense fallback={<div className="w-[240px] flex-shrink-0 bg-white border-r border-slate-200" />}>
+    <SidebarContent />
+  </Suspense>
+);
