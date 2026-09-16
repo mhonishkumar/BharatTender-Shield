@@ -9,7 +9,7 @@ services:
       - key: PYTHON_VERSION
         value: 3.12.0
       - key: DATABASE_URL
-        value: postgresql+psycopg2://postgres:mk1234%402026real%40@db.qpqicguuqeeftukvzb.supabase.co:5432/postgres?sslmode=require
+        value: postgresql+psycopg2://postgres:mk1234%402026real%40@db.qpqicguuqeeueftukvzb.supabase.co:5432/postgres?sslmode=require
         sync: false
       - key: JWT_SECRET
         generateValue: true
