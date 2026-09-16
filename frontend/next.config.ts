@@ -41,6 +41,20 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/bidder/dashboard',
+        destination: '/dashboard',
+        permanent: true,
+      },
+      {
+        source: '/officer/dashboard',
+        destination: '/dashboard',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
