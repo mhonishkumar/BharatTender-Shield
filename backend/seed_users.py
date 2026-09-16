@@ -13,6 +13,7 @@ def seed():
         hashed_pwd = get_password_hash("SecurePass123!")
         
         users = [
+            User(email="admin@bharattender.com", hashed_password=hashed_pwd, role="ADMIN", full_name="System Administrator", organization="BharatTender Shield Admin", is_active=True),
             User(email="bidder1@bharattender.com", hashed_password=hashed_pwd, role="BIDDER", full_name="Bidder One", organization="Bidder One Corp", is_active=True),
             User(email="bidder2@bharattender.com", hashed_password=hashed_pwd, role="BIDDER", full_name="Bidder Two", organization="Bidder Two Inc", is_active=True),
             User(email="bidder3@bharattender.com", hashed_password=hashed_pwd, role="BIDDER", full_name="Bidder Three", organization="Bidder Three LLC", is_active=True),
@@ -27,6 +28,13 @@ def seed():
             if not existing:
                 db.add(user)
                 count += 1
+            else:
+                existing.hashed_password = hashed_pwd
+
+        # Also update demo admin password
+        admin_demo = db.query(User).filter(User.email == "admin@gemsentinel.demo").first()
+        if admin_demo:
+            admin_demo.hashed_password = hashed_pwd
                 
         db.commit()
         print(f"Seeding complete. Inserted {count} new users.")
