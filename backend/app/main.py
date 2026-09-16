@@ -19,16 +19,18 @@ from app.routers import (
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Initialize Database Tables
-    Base.metadata.create_all(bind=engine)
-    
-    # Initialize Demo Data for SIH Presentation
-    db = SessionLocal()
+    # Initialize Database Tables & Demo Data safely
     try:
-        initialize_demo_data(db)
-    finally:
-        db.close()
+        Base.metadata.create_all(bind=engine)
+        db = SessionLocal()
+        try:
+            initialize_demo_data(db)
+        finally:
+            db.close()
+    except Exception as e:
+        print(f"[Startup Notice] Database initialization error (will retry on requests): {e}")
     yield
+
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
