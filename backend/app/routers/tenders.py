@@ -139,3 +139,58 @@ def update_tender_rule(
         details=f"Rule {rule.rule_code} updated by officer."
     )
     return rule
+
+@router.post("/{tender_id}/rules", response_model=schemas.TenderRuleResponse)
+def add_tender_rule(
+    tender_id: int,
+    rule_data: schemas.TenderRuleCreate,
+    current_user: models.User = Depends(require_role(["PROCUREMENT_OFFICER", "ADMIN"])),
+    db: Session = Depends(get_db)
+):
+    tender = db.query(models.Tender).filter(models.Tender.id == tender_id).first()
+    if not tender:
+        raise HTTPException(status_code=404, detail="Tender not found")
+
+    new_rule = models.TenderRule(
+        tender_id=tender.id,
+        rule_code=rule_data.rule_code,
+        category=rule_data.category,
+        requirement=rule_data.requirement,
+        validation_logic=rule_data.validation_logic,
+        is_mandatory=rule_data.is_mandatory,
+        is_approved_by_officer=rule_data.is_approved_by_officer,
+        original_clause=rule_data.original_clause
+    )
+    db.add(new_rule)
+    db.commit()
+    db.refresh(new_rule)
+
+    record_audit_log(
+        db=db,
+        action="TENDER_RULE_ADDED",
+        user_id=current_user.id,
+        user_email=current_user.email,
+        role=current_user.role,
+        tender_id=tender.id,
+        details=f"Rule {new_rule.rule_code} added to tender {tender.tender_ref}."
+    )
+    return new_rule
+
+@router.get("/{tender_id}/applications", response_model=List[schemas.ApplicationResponse])
+def get_tender_applications(
+    tender_id: int,
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    tender = db.query(models.Tender).filter(models.Tender.id == tender_id).first()
+    if not tender:
+        raise HTTPException(status_code=404, detail="Tender not found")
+
+    query = db.query(models.Application).filter(models.Application.tender_id == tender_id)
+    if current_user.role == "BIDDER":
+        if not current_user.bidder_profile:
+            return []
+        query = query.filter(models.Application.bidder_id == current_user.bidder_profile.id)
+
+    return query.order_by(models.Application.submitted_at.desc()).all()
+

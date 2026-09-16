@@ -158,6 +158,9 @@ def initialize_demo_data(db: Session):
         doc_type="GST_CERTIFICATE",
         file_name="ABC_Tech_GST_Registration_Certificate.pdf",
         file_path="uploads/demo_abc_gst.pdf",
+        storage_path="uploads/demo_abc_gst.pdf",
+        document_hash="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        uploaded_by=bidder_user_a.id,
         file_size=245000,
         status="UPLOADED",
         verification_status="PENDING"
@@ -167,6 +170,9 @@ def initialize_demo_data(db: Session):
         doc_type="PAN_CARD",
         file_name="ABC_Technologies_PAN_Card.pdf",
         file_path="uploads/demo_abc_pan.pdf",
+        storage_path="uploads/demo_abc_pan.pdf",
+        document_hash="f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2",
+        uploaded_by=bidder_user_a.id,
         file_size=180000,
         status="UPLOADED",
         verification_status="PENDING"
@@ -176,6 +182,9 @@ def initialize_demo_data(db: Session):
         doc_type="UDYAM_CERTIFICATE",
         file_name="ABC_Udyam_Registration_Certificate.pdf",
         file_path="uploads/demo_abc_udyam.pdf",
+        storage_path="uploads/demo_abc_udyam.pdf",
+        document_hash="5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+        uploaded_by=bidder_user_a.id,
         file_size=310000,
         status="UPLOADED",
         verification_status="PENDING"
@@ -185,6 +194,9 @@ def initialize_demo_data(db: Session):
         doc_type="TURNOVER_CERTIFICATE",
         file_name="ABC_CA_Certified_Turnover_Statement_FY24-25.pdf",
         file_path="uploads/demo_abc_turnover.pdf",
+        storage_path="uploads/demo_abc_turnover.pdf",
+        document_hash="4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a",
+        uploaded_by=bidder_user_a.id,
         file_size=420000,
         status="UPLOADED",
         verification_status="PENDING"
@@ -241,6 +253,9 @@ def initialize_demo_data(db: Session):
         doc_type="GST_CERTIFICATE",
         file_name="DEF_Safety_GST_Certificate.pdf",
         file_path="uploads/demo_def_gst.pdf",
+        storage_path="uploads/demo_def_gst.pdf",
+        document_hash="ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+        uploaded_by=bidder_user_b.id,
         file_size=220000,
         status="UPLOADED",
         verification_status="PENDING"
@@ -250,6 +265,9 @@ def initialize_demo_data(db: Session):
         doc_type="PAN_CARD",
         file_name="DEF_Company_PAN_Copy.pdf",
         file_path="uploads/demo_def_pan.pdf",
+        storage_path="uploads/demo_def_pan.pdf",
+        document_hash="e7f6c011776e8db7cd330b54174fd76f7d0216b612387a5ffcfb81e6f0919683",
+        uploaded_by=bidder_user_b.id,
         file_size=175000,
         status="UPLOADED",
         verification_status="PENDING"
@@ -259,12 +277,16 @@ def initialize_demo_data(db: Session):
         doc_type="UDYAM_CERTIFICATE",
         file_name="DEF_MSME_Udyam_Registration.pdf",
         file_path="uploads/demo_def_udyam.pdf",
+        storage_path="uploads/demo_def_udyam.pdf",
+        document_hash="7902699be42c8a8e46fbbb4501726517e86b22c56a189f7625a6da49081b2451",
+        uploaded_by=bidder_user_b.id,
         file_size=295000,
         status="UPLOADED",
         verification_status="PENDING"
     )
     db.add_all([doc_b1, doc_b2, doc_b3])
     db.commit()
+
 
     # Extracted data for Bidder B showing contradictory GSTIN embedded in Udyam
     ed_b1 = models.ExtractedData(

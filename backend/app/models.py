@@ -104,6 +104,8 @@ class Application(Base):
     verification_results = relationship("VerificationResult", back_populates="application", cascade="all, delete-orphan")
     clarifications = relationship("Clarification", back_populates="application", cascade="all, delete-orphan")
     decision = relationship("OfficerDecision", back_populates="application", uselist=False)
+    compliance_score_record = relationship("ComplianceScore", back_populates="application", uselist=False, cascade="all, delete-orphan")
+
 
 
 class Document(Base):
@@ -114,6 +116,9 @@ class Document(Base):
     doc_type = Column(String(50), nullable=False) # GST_CERTIFICATE, PAN_CARD, UDYAM_CERTIFICATE, TURNOVER_CERTIFICATE, OTHER
     file_name = Column(String(255), nullable=False)
     file_path = Column(String(255), nullable=False)
+    storage_path = Column(String(500), nullable=True)
+    document_hash = Column(String(64), nullable=True, index=True) # SHA-256
+    uploaded_by = Column(Integer, ForeignKey("users.id"), nullable=True)
     file_size = Column(Integer, default=0)
     mime_type = Column(String(100), default="application/pdf")
     status = Column(String(50), default="UPLOADED") # UPLOADED, EXTRACTED, VERIFIED, REJECTED
@@ -138,6 +143,24 @@ class ExtractedData(Base):
     document = relationship("Document", back_populates="extracted_data")
 
 
+class ComplianceScore(Base):
+    __tablename__ = "compliance_scores"
+
+    id = Column(Integer, primary_key=True, index=True)
+    application_id = Column(Integer, ForeignKey("applications.id"), unique=True, nullable=False)
+    total_score = Column(Integer, default=0) # 0 to 100
+    gst_score = Column(Integer, default=0)
+    pan_score = Column(Integer, default=0)
+    udyam_score = Column(Integer, default=0)
+    doc_completeness_score = Column(Integer, default=0)
+    financial_score = Column(Integer, default=0)
+    consistency_score = Column(Integer, default=0)
+    risk_level = Column(String(50), default="MEDIUM") # LOW, MEDIUM, HIGH
+    calculated_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+    application = relationship("Application", back_populates="compliance_score_record")
+
+
 class VerificationResult(Base):
     __tablename__ = "verification_results"
 
@@ -160,6 +183,7 @@ class VerificationResult(Base):
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     application = relationship("Application", back_populates="verification_results")
+
 
 
 class Clarification(Base):

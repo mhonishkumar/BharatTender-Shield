@@ -153,9 +153,13 @@ class DocumentResponse(BaseModel):
     status: str
     verification_status: str
     uploaded_at: datetime
+    storage_path: Optional[str] = None
+    document_hash: Optional[str] = None
+    uploaded_by: Optional[int] = None
 
     class Config:
         from_attributes = True
+
 
 # Verification Result Schemas
 class VerificationResultResponse(BaseModel):
