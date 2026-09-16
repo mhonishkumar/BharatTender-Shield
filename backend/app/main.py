@@ -9,6 +9,27 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 from app.config import settings
 from app.database import engine, Base, SessionLocal, get_db
+import logging
+logger = logging.getLogger("uvicorn.error")
+masked_url = settings.DATABASE_URL
+if "@" in masked_url:
+    # mask password
+    prefix, rest = masked_url.split("//", 1)
+    user_pass, host_part = rest.split("@", 1)
+    if ":" in user_pass:
+        user, _ = user_pass.split(":", 1)
+        masked_user_pass = f"{user}:***"
+    else:
+        masked_user_pass = "***"
+    masked_url = f"{prefix}//{masked_user_pass}@{host_part}"
+logger.info(f"[Startup] Using DATABASE_URL: {masked_url}")
+try:
+    with engine.connect() as conn:
+        conn.execute(text("SELECT 1"))
+    logger.info("[Startup] Database connection successful")
+except Exception as e:
+    logger.error(f"[Startup] Database connection failed: {e}")
+
 from app import models, schemas
 from app.services.seed_data import initialize_demo_data
 from app.routers import (

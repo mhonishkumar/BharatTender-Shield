@@ -9,7 +9,7 @@ services:
       - key: PYTHON_VERSION
         value: 3.12.0
       - key: DATABASE_URL
-        value: postgresql://postgres:[mk1234@2026real@]@db.qpqicguuqeeftukvzb.supabase.co:5432/postgres
+        value: postgresql://postgres:%5Bmk1234%402026real%40%5D@db.qpqicguuqeeftukvzb.supabase.co:5432/postgres?sslmode=require
         sync: false
       - key: JWT_SECRET
         generateValue: true
