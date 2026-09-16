@@ -1,69 +1,46 @@
+import logging
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from app.config import settings
 
+logger = logging.getLogger("uvicorn.error")
+
 def _create_db_engine():
+    """Create a SQLAlchemy engine.
+    - SQLite for local dev (when DATABASE_URL is not set)
+    - PostgreSQL+psycopg2 for Supabase/Render
+    """
     db_url = settings.DATABASE_URL
+
+    # SQLite fallback for local development
     if db_url.startswith("sqlite"):
         return create_engine(
             db_url,
             connect_args={"check_same_thread": False},
-            echo=False
+            echo=False,
         )
 
-    # For PostgreSQL on cloud (Render / Supabase)
-    pool_kwargs = {
-        "pool_pre_ping": True,
-        "pool_recycle": 300,
-        "pool_size": 10,
-        "max_overflow": 20,
-        "echo": False
-    }
+    # PostgreSQL — force psycopg2 driver (most reliable on Render)
+    # Normalize any variant to postgresql+psycopg2://
+    for prefix in ("postgresql+psycopg://", "postgresql://", "postgres://"):
+        if db_url.startswith(prefix):
+            db_url = db_url.replace(prefix, "postgresql+psycopg2://", 1)
+            break
 
-    # If URL is generic postgresql://, try drivers in order of preference
-    candidate_urls = []
-    if db_url.startswith("postgresql+psycopg://"):
-        candidate_urls = [
-            db_url,
-            db_url.replace("postgresql+psycopg://", "postgresql+psycopg2://"),
-            db_url.replace("postgresql+psycopg://", "postgresql://")
-        ]
-    elif db_url.startswith("postgresql+psycopg2://"):
-        candidate_urls = [
-            db_url,
-            db_url.replace("postgresql+psycopg2://", "postgresql+psycopg://"),
-            db_url.replace("postgresql+psycopg2://", "postgresql://")
-        ]
-    elif db_url.startswith("postgresql://"):
-        candidate_urls = [
-            db_url.replace("postgresql://", "postgresql+psycopg://"),
-            db_url.replace("postgresql://", "postgresql+psycopg2://"),
-            db_url
-        ]
-    else:
-        candidate_urls = [db_url]
+    logger.info(f"[database] Connecting with driver: psycopg2")
 
-    last_error = None
-    for url in candidate_urls:
-        try:
-            eng = create_engine(url, **pool_kwargs)
-            # Test that the dbapi driver can actually be loaded
-            _ = eng.dialect.dbapi
-            return eng
-        except Exception as e:
-            last_error = e
-            continue
+    return create_engine(
+        db_url,
+        pool_pre_ping=True,
+        pool_recycle=300,
+        pool_size=5,
+        max_overflow=10,
+        echo=False,
+    )
 
-    if last_error:
-        raise last_error
-    return create_engine(db_url, **pool_kwargs)
-
+# Create engine and session factory at import time
 engine = _create_db_engine()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-
-
-
 Base = declarative_base()
 
 def get_db():

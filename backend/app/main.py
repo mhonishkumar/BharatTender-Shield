@@ -103,6 +103,10 @@ app.include_router(audit.router)
 app.include_router(admin.router)
 app.include_router(notifications.router)
 
+# Diagnostics endpoint
+from app.routers import diagnostics
+app.include_router(diagnostics.router)
+
 # Serve uploaded documents and static assets
 if os.path.exists(settings.UPLOAD_DIR):
     app.mount("/uploads", StaticFiles(directory=str(settings.UPLOAD_DIR)), name="uploads")
