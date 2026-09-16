@@ -1,10 +1,12 @@
 # Updated to force new deploy
+import logging
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from app.config import settings
 
 logger = logging.getLogger("uvicorn.error")
+
 
 def _create_db_engine():
     """Create a SQLAlchemy engine.
