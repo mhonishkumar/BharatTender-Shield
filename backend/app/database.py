@@ -1,4 +1,5 @@
-import logging
+# Updated to force new deploy
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from app.config import settings
@@ -7,8 +8,8 @@ logger = logging.getLogger("uvicorn.error")
 
 def _create_db_engine():
     """Create a SQLAlchemy engine.
-    - SQLite for local dev (when DATABASE_URL is not set)
-    - PostgreSQL+psycopg2 for Supabase/Render
+    - SQLite for local dev when `DATABASE_URL` is not set.
+    - PostgreSQL on Render/Supabase using the `psycopg` (psycopg3) driver.
     """
     db_url = settings.DATABASE_URL
 
@@ -20,14 +21,14 @@ def _create_db_engine():
             echo=False,
         )
 
-    # PostgreSQL — force psycopg2 driver (most reliable on Render)
-    # Normalize any variant to postgresql+psycopg2://
-    for prefix in ("postgresql+psycopg://", "postgresql://", "postgres://"):
+    # Normalize any PostgreSQL URL to use the psycopg driver
+    # Accepted prefixes: postgresql://, postgres://, postgresql+psycopg://
+    for prefix in ("postgresql://", "postgres://", "postgresql+psycopg://"):
         if db_url.startswith(prefix):
-            db_url = db_url.replace(prefix, "postgresql+psycopg2://", 1)
+            db_url = db_url.replace(prefix, "postgresql+psycopg://", 1)
             break
 
-    logger.info(f"[database] Connecting with driver: psycopg2")
+    logger.info(f"[database] Using driver URL: {db_url}")
 
     return create_engine(
         db_url,
