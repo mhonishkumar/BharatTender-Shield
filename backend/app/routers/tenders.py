@@ -194,3 +194,150 @@ def get_tender_applications(
 
     return query.order_by(models.Application.submitted_at.desc()).all()
 
+
+@router.post("/{tender_id}/assign-bidder")
+def assign_bidder_to_tender(
+    tender_id: int,
+    payload: dict,
+    current_user: models.User = Depends(require_role(["PROCUREMENT_OFFICER", "ADMIN"])),
+    db: Session = Depends(get_db)
+):
+    """Officer assigns a tender to a specific bidder."""
+    tender = db.query(models.Tender).filter(models.Tender.id == tender_id).first()
+    if not tender:
+        raise HTTPException(status_code=404, detail="Tender not found")
+
+    bidder_id = payload.get("bidder_id")
+    if not bidder_id:
+        raise HTTPException(status_code=422, detail="bidder_id is required")
+
+    bidder = db.query(models.BidderProfile).filter(models.BidderProfile.id == bidder_id).first()
+    if not bidder:
+        raise HTTPException(status_code=404, detail="Bidder not found")
+
+    # Check if already assigned
+    existing = db.query(models.TenderAssignment).filter(
+        models.TenderAssignment.tender_id == tender_id,
+        models.TenderAssignment.bidder_id == bidder_id
+    ).first()
+    if existing:
+        return {"message": "Bidder already assigned to this tender", "assignment_id": existing.id}
+
+    assignment = models.TenderAssignment(
+        tender_id=tender_id,
+        bidder_id=bidder_id,
+        assigned_by=current_user.id,
+        status="INVITED"
+    )
+    db.add(assignment)
+
+    # Create notification for bidder
+    notification = models.Notification(
+        user_id=bidder.user_id,
+        title="New Tender Assigned",
+        message=f"You have been invited to bid on: {tender.title} ({tender.tender_ref})",
+        notification_type="INFO",
+        link=f"/bidder/tenders/{tender_id}"
+    )
+    db.add(notification)
+    db.commit()
+    db.refresh(assignment)
+
+    record_audit_log(
+        db=db,
+        action="TENDER_BIDDER_ASSIGNED",
+        user_id=current_user.id,
+        user_email=current_user.email,
+        role=current_user.role,
+        tender_id=tender_id,
+        details=f"Bidder {bidder.company_name} assigned to tender {tender.tender_ref}."
+    )
+
+    return {"message": "Bidder successfully assigned", "assignment_id": assignment.id}
+
+
+@router.get("/{tender_id}/assigned-bidders")
+def get_assigned_bidders(
+    tender_id: int,
+    current_user: models.User = Depends(require_role(["PROCUREMENT_OFFICER", "ADMIN"])),
+    db: Session = Depends(get_db)
+):
+    """Get all bidders assigned to a tender."""
+    assignments = db.query(models.TenderAssignment).filter(
+        models.TenderAssignment.tender_id == tender_id
+    ).all()
+    return [
+        {
+            "assignment_id": a.id,
+            "bidder_id": a.bidder_id,
+            "company_name": a.bidder.company_name,
+            "gstin": a.bidder.gstin,
+            "status": a.status,
+            "assigned_at": a.assigned_at
+        }
+        for a in assignments
+    ]
+
+
+@router.get("/bidder/my-tenders")
+def get_bidder_assigned_tenders(
+    current_user: models.User = Depends(require_role(["BIDDER"])),
+    db: Session = Depends(get_db)
+):
+    """Get tenders assigned to the currently logged-in bidder."""
+    if not current_user.bidder_profile:
+        return []
+
+    assignments = db.query(models.TenderAssignment).filter(
+        models.TenderAssignment.bidder_id == current_user.bidder_profile.id
+    ).all()
+
+    result = []
+    for a in assignments:
+        t = a.tender
+        result.append({
+            "assignment_id": a.id,
+            "assignment_status": a.status,
+            "tender_id": t.id,
+            "tender_ref": t.tender_ref,
+            "title": t.title,
+            "department": t.department,
+            "description": t.description,
+            "bid_submission_date": t.bid_submission_date,
+            "deadline": t.deadline,
+            "min_turnover": t.min_turnover,
+            "status": t.status,
+            "rules": [
+                {"category": r.category, "requirement": r.requirement, "is_mandatory": r.is_mandatory}
+                for r in t.rules
+            ]
+        })
+    return result
+
+
+@router.post("/{tender_id}/publish")
+def publish_tender(
+    tender_id: int,
+    current_user: models.User = Depends(require_role(["PROCUREMENT_OFFICER", "ADMIN"])),
+    db: Session = Depends(get_db)
+):
+    """Publish a draft tender so bidders can apply."""
+    tender = db.query(models.Tender).filter(models.Tender.id == tender_id).first()
+    if not tender:
+        raise HTTPException(status_code=404, detail="Tender not found")
+
+    tender.status = "OPEN"
+    db.commit()
+
+    record_audit_log(
+        db=db,
+        action="TENDER_PUBLISHED",
+        user_id=current_user.id,
+        user_email=current_user.email,
+        role=current_user.role,
+        tender_id=tender_id,
+        details=f"Tender {tender.tender_ref} published and now open for bids."
+    )
+    return {"message": "Tender published successfully", "tender_ref": tender.tender_ref, "status": "OPEN"}
+
+

@@ -165,14 +165,7 @@ export default function LandingPage() {
                 className="bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 px-3.5 py-2 rounded-md text-xs font-semibold flex items-center space-x-1.5 transition-all shadow-xs"
               >
                 <LogIn className="w-3.5 h-3.5" />
-                <span>Login</span>
-              </Link>
-              <Link
-                href="/admin"
-                className="bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-800 px-3 py-2 rounded-md text-xs font-semibold flex items-center space-x-1.5 transition-all shadow-xs"
-              >
-                <Lock className="w-3.5 h-3.5" />
-                <span>Admin Console</span>
+                <span>Sign In</span>
               </Link>
               <Link
                 href="/login"
@@ -214,14 +207,6 @@ export default function LandingPage() {
                 >
                   <LogIn className="w-4 h-4" />
                   <span>Sign In</span>
-                </Link>
-                <Link
-                  href="/admin"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="bg-purple-50 border border-purple-200 text-purple-800 px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center space-x-2 w-full"
-                >
-                  <Lock className="w-4 h-4" />
-                  <span>Admin Console</span>
                 </Link>
                 <Link
                   href="/login"

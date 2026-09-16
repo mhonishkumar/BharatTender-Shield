@@ -249,3 +249,19 @@ class Notification(Base):
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     user = relationship("User", back_populates="notifications")
+
+
+class TenderAssignment(Base):
+    """Tracks explicit assignment of a tender to a specific bidder by an officer."""
+    __tablename__ = "tender_assignments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    tender_id = Column(Integer, ForeignKey("tenders.id"), nullable=False)
+    bidder_id = Column(Integer, ForeignKey("bidder_profiles.id"), nullable=False)
+    assigned_by = Column(Integer, ForeignKey("users.id"), nullable=False)
+    status = Column(String(50), default="INVITED")  # INVITED, VIEWED, APPLIED, UNDER_VERIFICATION, COMPLETED
+    assigned_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+    tender = relationship("Tender")
+    bidder = relationship("BidderProfile")
+    officer = relationship("User", foreign_keys=[assigned_by])
