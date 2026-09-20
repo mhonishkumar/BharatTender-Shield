@@ -34,9 +34,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 dark:from-slate-900 dark:via-[#0F1E35] dark:to-slate-900 flex flex-col">
       {/* Top Banner */}
-      <div className="bg-[#0F294A] text-white py-2 px-4 text-center text-xs font-medium">
+      <div className="bg-[#0F294A] dark:bg-slate-900 text-white py-2 px-4 text-center text-xs font-medium border-b border-transparent dark:border-slate-800">
         <span className="hidden sm:inline">
           Government of India &nbsp;•&nbsp; Ministry of Petroleum &amp; Natural Gas &nbsp;•&nbsp; Secure Procurement Portal
         </span>
@@ -62,19 +62,19 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <div className="inline-flex items-center space-x-1.5 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-bold mb-3">
+              <div className="inline-flex items-center space-x-1.5 bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-xs font-bold mb-3">
                 <Shield className="w-3 h-3" />
                 <span>SHA-256 Cryptographically Secured</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-[#0F294A] leading-tight">
+              <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-[#0F294A] dark:text-white leading-tight">
                 BharatTender Shield
               </h1>
-              <p className="text-sm font-bold text-orange-600 mt-1">
+              <p className="text-sm font-bold text-orange-600 dark:text-orange-400 mt-1">
                 Every Bid Verified. Every Decision Defensible.
               </p>
             </div>
 
-            <p className="text-sm text-slate-600 leading-relaxed max-w-md mx-auto lg:mx-0">
+            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-md mx-auto lg:mx-0">
               AI-assisted bid compliance verification for transparent, evidence-based
               government procurement. Cross-verifies GST, PAN, Udyam MSME, and
               bid-date validity with tamper-evident audit trails.
@@ -82,14 +82,14 @@ export default function LoginPage() {
 
             <div className="grid grid-cols-2 gap-2.5 max-w-sm mx-auto lg:mx-0">
               {[
-                { icon: CheckCircle2, label: "Deterministic Rules", color: "text-emerald-600" },
-                { icon: Shield, label: "SHA-256 Audit Chain", color: "text-[#0F294A]" },
-                { icon: Cpu, label: "AI Evidence Extraction", color: "text-orange-600" },
-                { icon: UserCheck, label: "Human-in-the-Loop", color: "text-blue-700" },
+                { icon: CheckCircle2, label: "Deterministic Rules", color: "text-emerald-600 dark:text-emerald-400" },
+                { icon: Shield, label: "SHA-256 Audit Chain", color: "text-[#0F294A] dark:text-blue-400" },
+                { icon: Cpu, label: "AI Evidence Extraction", color: "text-orange-600 dark:text-orange-400" },
+                { icon: UserCheck, label: "Human-in-the-Loop", color: "text-blue-700 dark:text-blue-400" },
               ].map(({ icon: Icon, label, color }) => (
-                <div key={label} className="flex items-center space-x-2 bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm">
+                <div key={label} className="flex items-center space-x-2 bg-white dark:bg-[#0F1E35] p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
                   <Icon className={`w-4 h-4 shrink-0 ${color}`} />
-                  <span className="text-xs font-semibold text-slate-700">{label}</span>
+                  <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">{label}</span>
                 </div>
               ))}
             </div>
@@ -97,16 +97,16 @@ export default function LoginPage() {
 
           {/* Right: Login Card */}
           <div>
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-xl p-6 sm:p-8 space-y-6">
+            <div className="bg-white dark:bg-[#0F1E35] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl p-6 sm:p-8 space-y-6">
               <div>
-                <h2 className="text-2xl font-black text-[#0F294A]">Portal Sign In</h2>
-                <p className="text-xs text-slate-500 mt-1">
+                <h2 className="text-2xl font-black text-[#0F294A] dark:text-white">Portal Sign In</h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                   Sign in with your official credentials to access the procurement portal.
                 </p>
               </div>
 
               {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 text-xs p-3 rounded-xl flex items-start space-x-2">
+                <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-xs p-3 rounded-xl flex items-start space-x-2">
                   <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
                   <span>{error}</span>
                 </div>
@@ -124,7 +124,7 @@ export default function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your official email"
-                    className="w-full text-sm border border-slate-300 dark:border-slate-700 rounded-xl p-3 bg-slate-50 dark:bg-[#0A1628] text-slate-900 dark:text-white focus:bg-white dark:focus:bg-[#0F1E35] focus:outline-none focus:ring-2 focus:ring-[#0F294A]/30 dark:focus:ring-blue-500/50 focus:border-[#0F294A] dark:focus:border-blue-500 transition-all"
+                    className="w-full text-sm border border-slate-300 dark:border-slate-700 rounded-xl p-3 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0F294A]/30 dark:focus:ring-blue-500/50 focus:border-[#0F294A] dark:focus:border-blue-500 transition-all"
                     autoComplete="email"
                   />
                 </div>
@@ -148,7 +148,7 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
-                    className="w-full text-sm border border-slate-300 dark:border-slate-700 rounded-xl p-3 bg-slate-50 dark:bg-[#0A1628] text-slate-900 dark:text-white focus:bg-white dark:focus:bg-[#0F1E35] focus:outline-none focus:ring-2 focus:ring-[#0F294A]/30 dark:focus:ring-blue-500/50 focus:border-[#0F294A] dark:focus:border-blue-500 transition-all"
+                    className="w-full text-sm border border-slate-300 dark:border-slate-700 rounded-xl p-3 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0F294A]/30 dark:focus:ring-blue-500/50 focus:border-[#0F294A] dark:focus:border-blue-500 transition-all"
                     autoComplete="current-password"
                   />
                 </div>
@@ -165,8 +165,8 @@ export default function LoginPage() {
                 </button>
               </form>
 
-              <div className="pt-4 border-t border-slate-100 text-center">
-                <p className="text-xs text-slate-500">
+              <div className="pt-4 border-t border-slate-100 dark:border-slate-800 text-center">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Contact your system administrator if you cannot access your account.
                 </p>
               </div>
@@ -174,7 +174,7 @@ export default function LoginPage() {
 
             {/* Back to home */}
             <div className="mt-4 text-center">
-              <Link href="/" className="text-xs text-slate-500 hover:text-[#0F294A] flex items-center justify-center space-x-1 transition-colors">
+              <Link href="/" className="text-xs text-slate-500 dark:text-slate-400 hover:text-[#0F294A] dark:hover:text-white flex items-center justify-center space-x-1 transition-colors">
                 <span>← Back to Home</span>
               </Link>
             </div>
@@ -183,7 +183,7 @@ export default function LoginPage() {
       </div>
 
       {/* Footer */}
-      <footer className="py-4 border-t border-slate-200 bg-white/80 text-center text-xs text-slate-500">
+      <footer className="py-4 border-t border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-[#0F1E35]/80 text-center text-xs text-slate-500 dark:text-slate-400">
         BharatTender Shield &nbsp;•&nbsp; GeM Procurement Compliance System &nbsp;•&nbsp; SIH 2026 Problem Statement 26100
       </footer>
     </div>
