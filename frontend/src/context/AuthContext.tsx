@@ -18,7 +18,6 @@ interface AuthContextType {
   token: string | null;
   isLoading: boolean;
   login: (email: string, pass: string) => Promise<void>;
-  demoLogin: (roleKey: "officer" | "bidder" | "bidder_b" | "admin") => Promise<void>;
   logout: () => void;
 }
 
@@ -42,7 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setToken(savedToken);
         setRole(savedRole);
         setUser(parsedUser);
-      } catch (e) {
+      } catch {
         clearAuth();
       }
     }
@@ -58,36 +57,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         email: data.email,
         full_name: data.full_name,
         role: data.role,
+        organization: data.organization,
       };
       setToken(data.access_token);
       setRole(data.role);
       setUser(userObj);
       setAuthToken(data.access_token, data.role, userObj);
 
-      const targetRoute = data.role === "ADMIN" ? "/admin" : (data.role === "BIDDER" ? "/bidder/verification" : "/dashboard");
-      router.push(targetRoute);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const demoLogin = async (roleKey: "officer" | "bidder" | "bidder_b" | "admin") => {
-    setIsLoading(true);
-    try {
-      const data = await api.demoLogin(roleKey);
-      const userObj: User = {
-        id: data.user_id,
-        email: data.email,
-        full_name: data.full_name,
-        role: data.role,
-      };
-      setToken(data.access_token);
-      setRole(data.role);
-      setUser(userObj);
-      setAuthToken(data.access_token, data.role, userObj);
-
-      const targetRoute = data.role === "ADMIN" ? "/admin" : (data.role === "BIDDER" ? "/bidder/verification" : "/dashboard");
-      router.push(targetRoute);
+      if (data.role === "ADMIN") {
+        router.push("/admin");
+      } else if (data.role === "BIDDER") {
+        router.push("/dashboard");
+      } else {
+        router.push("/dashboard");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -102,7 +85,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, role, token, isLoading, login, demoLogin, logout }}>
+    <AuthContext.Provider value={{ user, role, token, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

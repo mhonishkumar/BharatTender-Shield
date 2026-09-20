@@ -4,43 +4,57 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  ArrowRight,
-  Shield,
-  Cpu,
-  Lock,
-  CheckCircle2,
-  FileText,
-  UserCheck,
-  Play,
-  Layers,
-  FileCheck,
-  SearchCheck,
-  AlertTriangle,
-  MessageSquare,
-  History as HistoryIcon,
-  FileSpreadsheet,
-  Building,
-  CheckCircle,
-  HelpCircle,
-  LogIn,
-  ShieldCheck,
-  Menu,
-  X,
-  Landmark,
-  Briefcase,
-  Award,
-  Sparkles,
-  DollarSign,
-  Scale,
-  Zap,
-  ExternalLink
-} from "lucide-react";
+  ArrowRightIcon as ArrowRight,
+  ShieldCheckIcon as Shield,
+  CpuChipIcon as Cpu,
+  LockClosedIcon as Lock,
+  CheckCircleIcon as CheckCircle2,
+  DocumentTextIcon as FileText,
+  CheckBadgeIcon as UserCheck,
+  PlayIcon as Play,
+  Square3Stack3DIcon as Layers,
+  DocumentCheckIcon as FileCheck,
+  DocumentMagnifyingGlassIcon as SearchCheck,
+  ExclamationTriangleIcon as AlertTriangle,
+  ChatBubbleLeftEllipsisIcon as MessageSquare,
+  ClockIcon as HistoryIcon,
+  TableCellsIcon as FileSpreadsheet,
+  BuildingOfficeIcon as Building,
+  CheckCircleIcon as CheckCircle,
+  QuestionMarkCircleIcon as HelpCircle,
+  ArrowRightOnRectangleIcon as LogIn,
+  ShieldCheckIcon as ShieldCheck,
+  Bars3Icon as Menu,
+  XMarkIcon as X,
+  BuildingLibraryIcon as Landmark,
+  BriefcaseIcon as Briefcase,
+  TrophyIcon as Award,
+  SparklesIcon as Sparkles,
+  CurrencyDollarIcon as DollarSign,
+  ScaleIcon as Scale,
+  BoltIcon as Zap,
+  ArrowTopRightOnSquareIcon as ExternalLink
+} from "@heroicons/react/24/outline";
 import { Chatbot } from "@/components/Chatbot";
 
 export default function LandingPage() {
   const [activeTab, setActiveTab] = useState("home");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSchemeModal, setActiveSchemeModal] = useState<any | null>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const slides = [
+    { title: "Government e Marketplace (GeM) Integrated", sub: "Ministry of Petroleum & Natural Gas • CPCL Portal", badge: "SHA-256 Hash Chain Active" },
+    { title: "AI-Powered Compliance Verification", sub: "Extracts and verifies GST, PAN, and Udyam instantly.", badge: "Deterministic PyMuPDF Engine" },
+    { title: "Immutable Audit Trails", sub: "Cryptographic transparency for every officer decision.", badge: "Zero-Trust Architecture" }
+  ];
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
 
   const governmentSchemes = [
     {
@@ -165,14 +179,7 @@ export default function LandingPage() {
                 className="bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 px-3.5 py-2 rounded-md text-xs font-semibold flex items-center space-x-1.5 transition-all shadow-xs"
               >
                 <LogIn className="w-3.5 h-3.5" />
-                <span>Login</span>
-              </Link>
-              <Link
-                href="/admin"
-                className="bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-800 px-3 py-2 rounded-md text-xs font-semibold flex items-center space-x-1.5 transition-all shadow-xs"
-              >
-                <Lock className="w-3.5 h-3.5" />
-                <span>Admin Console</span>
+                <span>Sign In</span>
               </Link>
               <Link
                 href="/login"
@@ -214,14 +221,6 @@ export default function LandingPage() {
                 >
                   <LogIn className="w-4 h-4" />
                   <span>Sign In</span>
-                </Link>
-                <Link
-                  href="/admin"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="bg-purple-50 border border-purple-200 text-purple-800 px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center space-x-2 w-full"
-                >
-                  <Lock className="w-4 h-4" />
-                  <span>Admin Console</span>
                 </Link>
                 <Link
                   href="/login"
@@ -268,25 +267,25 @@ export default function LandingPage() {
                   href="/login"
                   className="bg-[#0F294A] hover:bg-blue-900 text-white px-6 py-3 rounded-lg text-sm font-bold flex items-center justify-center space-x-2 transition-all shadow-md active:scale-95"
                 >
-                  <span>Login to Portal</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <Briefcase className="w-4 h-4 text-emerald-400" />
+                  <span>Bidder Portal</span>
+                </Link>
+
+                <Link
+                  href="/login"
+                  className="bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 px-6 py-3 rounded-lg text-sm font-bold flex items-center justify-center space-x-2 transition-all shadow-xs active:scale-95"
+                >
+                  <ShieldCheck className="w-4 h-4 text-orange-500" />
+                  <span>Officer Console</span>
                 </Link>
 
                 <a
                   href="#how-it-works"
-                  className="bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 px-6 py-3 rounded-lg text-sm font-bold flex items-center justify-center space-x-2 transition-all shadow-xs active:scale-95"
+                  className="bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 px-5 py-3 rounded-lg text-sm font-bold flex items-center justify-center space-x-2 transition-all shadow-xs"
                 >
                   <Play className="w-4 h-4 text-[#0F294A] fill-[#0F294A]" />
                   <span>How It Works</span>
                 </a>
-
-                <Link
-                  href="/admin"
-                  className="bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 px-5 py-3 rounded-lg text-sm font-bold flex items-center justify-center space-x-2 transition-all shadow-xs"
-                >
-                  <Lock className="w-4 h-4 text-purple-700" />
-                  <span>Admin Console</span>
-                </Link>
               </div>
 
               {/* Quick Trust Badges */}
@@ -306,28 +305,33 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Right Graphic Badge */}
             <div className="lg:col-span-5 flex justify-center mt-6 lg:mt-0">
-              <div className="relative max-w-sm md:max-w-md w-full p-6 bg-white rounded-2xl border border-slate-200 shadow-xl space-y-4 text-center">
+              <div className="relative max-w-sm md:max-w-md w-full p-6 bg-white rounded-2xl border border-slate-200 shadow-xl space-y-4 text-center overflow-hidden transition-all">
+                <div className="absolute top-2 right-4 flex space-x-1">
+                  {slides.map((_, i) => (
+                    <div key={i} className={`h-1.5 w-6 rounded-full transition-colors ${currentSlide === i ? "bg-[#0F294A]" : "bg-slate-200"}`} />
+                  ))}
+                </div>
+                
                 <div className="relative w-40 h-40 md:w-48 md:h-48 mx-auto flex items-center justify-center">
                   <Image
                     src="/logo.jpg"
                     alt="BharatTender Shield Emblem"
                     width={180}
                     height={180}
-                    className="object-contain"
+                    className="object-contain transition-transform duration-500 hover:scale-105"
                     priority
                   />
                 </div>
-                <div className="border-t border-slate-100 pt-3">
+                <div className="border-t border-slate-100 pt-3 min-h-[100px] flex flex-col justify-center transition-opacity duration-300">
                   <span className="text-xs font-bold text-[#0F294A] block">
-                    Government e Marketplace (GeM) Integrated
+                    {slides[currentSlide].title}
                   </span>
-                  <span className="text-[11px] text-slate-500 font-medium block mt-0.5">
-                    Ministry of Petroleum & Natural Gas • CPCL Portal
+                  <span className="text-[11px] text-slate-500 font-medium block mt-1">
+                    {slides[currentSlide].sub}
                   </span>
                   <div className="mt-3 inline-block bg-slate-100 text-slate-700 text-[10px] font-mono px-2 py-1 rounded border border-slate-200">
-                    SHA-256 Hash Chain Active
+                    {slides[currentSlide].badge}
                   </div>
                 </div>
               </div>

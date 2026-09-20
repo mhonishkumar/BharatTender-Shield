@@ -9,26 +9,49 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 from app.config import settings
 from app.database import engine, Base, SessionLocal, get_db
+import logging
+logger = logging.getLogger("uvicorn.error")
+masked_url = settings.DATABASE_URL
+if "@" in masked_url:
+    # mask password
+    prefix, rest = masked_url.split("//", 1)
+    user_pass, host_part = rest.split("@", 1)
+    if ":" in user_pass:
+        user, _ = user_pass.split(":", 1)
+        masked_user_pass = f"{user}:***"
+    else:
+        masked_user_pass = "***"
+    masked_url = f"{prefix}//{masked_user_pass}@{host_part}"
+logger.info(f"[Startup] Using DATABASE_URL: {masked_url}")
+try:
+    with engine.connect() as conn:
+        conn.execute(text("SELECT 1"))
+    logger.info("[Startup] Database connection successful")
+except Exception as e:
+    logger.error(f"[Startup] Database connection failed: {e}")
+
 from app import models, schemas
 from app.services.seed_data import initialize_demo_data
 from app.routers import (
     auth, tenders, applications, verification, mock_gov,
-    clarifications, decisions, reports, audit, admin, notifications
+    clarifications, decisions, reports, audit, admin, notifications, rag
 )
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Initialize Database Tables
-    Base.metadata.create_all(bind=engine)
-    
-    # Initialize Demo Data for SIH Presentation
-    db = SessionLocal()
+    # Initialize Database Tables & Demo Data safely
     try:
-        initialize_demo_data(db)
-    finally:
-        db.close()
+        Base.metadata.create_all(bind=engine)
+        db = SessionLocal()
+        try:
+            initialize_demo_data(db)
+        finally:
+            db.close()
+    except Exception as e:
+        print(f"[Startup Notice] Database initialization error (will retry on requests): {e}")
     yield
+
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -79,6 +102,11 @@ app.include_router(reports.router)
 app.include_router(audit.router)
 app.include_router(admin.router)
 app.include_router(notifications.router)
+app.include_router(rag.router)
+
+# Diagnostics endpoint
+from app.routers import diagnostics
+app.include_router(diagnostics.router)
 
 # Serve uploaded documents and static assets
 if os.path.exists(settings.UPLOAD_DIR):

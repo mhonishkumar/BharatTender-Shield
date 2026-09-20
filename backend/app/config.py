@@ -1,5 +1,9 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 try:
     from pydantic_settings import BaseSettings
@@ -17,12 +21,11 @@ def _get_database_url() -> str:
     url = os.getenv("DATABASE_URL", "").strip()
     if not url:
         return f"sqlite:///{BASE_DIR}/bharattender_shield.db"
-    # Normalize postgres:// to postgresql+psycopg://
+    # If Render or Supabase provides postgres://, normalize to postgresql://
     if url.startswith("postgres://"):
-        url = url.replace("postgres://", "postgresql+psycopg://", 1)
-    elif url.startswith("postgresql://") and not url.startswith("postgresql+"):
-        url = url.replace("postgresql://", "postgresql+psycopg://", 1)
+        url = url.replace("postgres://", "postgresql://", 1)
     return url
+
 
 class Settings:
     PROJECT_NAME: str = "BharatTender Shield"
@@ -38,6 +41,14 @@ class Settings:
     DATABASE_URL: str = _get_database_url()
 
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
+
+    # Supabase (for pgvector embedding storage)
+    SUPABASE_URL: str = os.getenv("SUPABASE_URL", "")
+    SUPABASE_SERVICE_ROLE_KEY: str = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
+
+    # Embedding model (configurable)
+    GEMINI_EMBEDDING_MODEL: str = os.getenv("GEMINI_EMBEDDING_MODEL", "models/text-embedding-004")
+    EMBEDDING_DIM: int = 768  # text-embedding-004 output dimension
     FRONTEND_URL: str = os.getenv("FRONTEND_URL", "").strip().rstrip("/")
     ALLOWED_ORIGINS: str = os.getenv("ALLOWED_ORIGINS", "")
 

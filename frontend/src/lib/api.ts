@@ -196,135 +196,6 @@ const DEMO_ADMIN_USERS = [
   }
 ];
 
-function getDemoFallback(endpoint: string, options: RequestInit = {}): any {
-  // Login fallback
-  if (endpoint === "/api/auth/login" && options.body) {
-    try {
-      const { email, password } = JSON.parse(options.body as string);
-      if (password === "Demo@12345" && DEMO_USERS_MAP[email]) {
-        return DEMO_USERS_MAP[email];
-      }
-      if (DEMO_USERS_MAP[email]) {
-        return DEMO_USERS_MAP[email];
-      }
-    } catch {
-      // ignore
-    }
-  }
-
-  // Demo Login fallback
-  if (endpoint.startsWith("/api/auth/demo-login/")) {
-    const roleKey = endpoint.split("/").pop();
-    if (roleKey === "officer") return DEMO_USERS_MAP["officer@gemsentinel.demo"];
-    if (roleKey === "bidder") return DEMO_USERS_MAP["bidder@gemsentinel.demo"];
-    if (roleKey === "bidder_b") return DEMO_USERS_MAP["bidder_b@gemsentinel.demo"];
-    if (roleKey === "admin") return DEMO_USERS_MAP["admin@gemsentinel.demo"];
-  }
-
-  // Tenders fallback
-  if (endpoint === "/api/tenders") return DEMO_TENDERS;
-  if (endpoint.startsWith("/api/tenders/")) return DEMO_TENDERS[0];
-
-  // Applications fallback
-  if (endpoint.startsWith("/api/applications")) {
-    if (endpoint === "/api/applications/2" || endpoint.startsWith("/api/applications/2")) return DEMO_APPLICATIONS[0];
-    if (endpoint === "/api/applications/1" || endpoint.startsWith("/api/applications/1")) return DEMO_APPLICATIONS[1];
-    return DEMO_APPLICATIONS;
-  }
-
-  // Verification Results fallback
-  if (endpoint.includes("/verification/")) {
-    return {
-      application_id: 2,
-      composite_score: 59,
-      risk_level: "HIGH",
-      rules: [
-        { id: 1, rule_name: "GSTIN Active Status", status: "PASS", evidence: "GSTIN 27AABCS1429B1ZB verified active in GSTN database." },
-        { id: 2, rule_name: "PAN-GST Match", status: "PASS", evidence: "PAN AABCS1429B matches entity registration." },
-        { id: 3, rule_name: "Annual Turnover Threshold", status: "FAIL", evidence: "Claimed turnover ₹42L does not meet tender minimum of ₹50L." },
-        { id: 4, rule_name: "Udyam MSME Category", status: "PASS", evidence: "Udyam UDYAM-MH-01-0012345 verified as Small Enterprise." },
-        { id: 5, rule_name: "Time-aware Bid Validity", status: "PASS", evidence: "All certificates valid prior to bid cut-off." }
-      ],
-      discrepancies: [
-        {
-          id: 1,
-          severity: "HIGH",
-          field: "Annual Turnover Certificate",
-          claimed_value: "₹42,00,000",
-          verified_value: "Minimum ₹50,00,000 Required",
-          issue: "Deficit of ₹8,00,000 against mandatory tender criteria."
-        }
-      ]
-    };
-  }
-
-  // Audit Logs fallback
-  if (endpoint === "/api/audit/logs") return DEMO_AUDIT_LOGS;
-  if (endpoint === "/api/audit/verify") {
-    return {
-      valid: true,
-      total_entries: 18,
-      message: "Cryptographic SHA-256 hash chain verified intact. All blocks tamper-proof and defensively sealed.",
-      last_hash: "a9f8b2c4e6d1f30872a5b1c9e8d7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9"
-    };
-  }
-
-  // Notifications fallback
-  if (endpoint === "/api/notifications") {
-    return [
-      {
-        id: 1,
-        title: "Tender Bid Verification Ready",
-        message: "Application APP-2026-002 has completed AI rule checks with 1 high discrepancy flagged.",
-        is_read: false,
-        created_at: new Date().toISOString()
-      },
-      {
-        id: 2,
-        title: "Audit Hash Sealed",
-        message: "SHA-256 hash block #18 recorded into cryptographic audit trail.",
-        is_read: true,
-        created_at: new Date(Date.now() - 3600000).toISOString()
-      }
-    ];
-  }
-
-  // Admin Stats fallback
-  if (endpoint === "/api/admin/stats") {
-    return {
-      total_users: 4,
-      total_officers: 1,
-      total_bidders: 2,
-      active_tenders: 1,
-      pending_verifications: 2,
-      high_risk_applications: 1,
-      pending_clarifications: 1,
-      verified_bidders: 1,
-      total_audit_logs: 18
-    };
-  }
-
-  // Admin Users fallback
-  if (endpoint.startsWith("/api/admin/users")) {
-    return DEMO_ADMIN_USERS;
-  }
-
-  // Report fallback
-  if (endpoint.includes("/reports/")) {
-    return {
-      application_id: 2,
-      report_title: "AI Compliance & Evidence Verification Report",
-      tender_ref: "GEM-DEMO-2026-001",
-      bidder: "DEF Safety Infra Ltd",
-      score: 59,
-      verdict: "UNDER_REVIEW",
-      sha256_seal: "a9f8b2c4e6d1f30872a5b1c9e8d7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9"
-    };
-  }
-
-  return { success: true, message: "Action recorded successfully." };
-}
-
 async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
   const token = getAuthToken();
   const headers: Record<string, string> = {
@@ -335,40 +206,25 @@ async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000);
+  const response = await fetch(`${API_BASE}${endpoint}`, {
+    ...options,
+    headers,
+  });
 
-    const response = await fetch(`${API_BASE}${endpoint}`, {
-      ...options,
-      headers,
-      signal: controller.signal,
-    });
-
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      let errorDetail = "An unexpected error occurred.";
-      try {
-        const errJson = await response.json();
-        errorDetail = errJson.detail || errJson.message || JSON.stringify(errJson);
-      } catch {
-        errorDetail = response.statusText || `${response.status}`;
-      }
-      throw new Error(errorDetail);
+  if (!response.ok) {
+    let errorDetail = "An unexpected error occurred.";
+    try {
+      const errJson = await response.json();
+      errorDetail = errJson.detail || errJson.message || JSON.stringify(errJson);
+    } catch {
+      errorDetail = response.statusText || `HTTP ${response.status}`;
     }
-
-    return await response.json();
-  } catch (error: any) {
-    // If network error, abort, or backend offline, gracefully provide resilient demo fallback!
-    console.warn(`API live fetch failed for ${endpoint}. Serving robust demo fallback. Reason:`, error?.message);
-    const fallback = getDemoFallback(endpoint, options);
-    if (fallback) {
-      return fallback;
-    }
-    throw error;
+    throw new Error(errorDetail);
   }
+
+  return await response.json();
 }
+
 
 export const api = {
   // Auth
@@ -380,12 +236,6 @@ export const api = {
     });
   },
 
-  demoLogin: async (role: "officer" | "bidder" | "bidder_b" | "admin") => {
-    return fetchWithAuth(`/api/auth/demo-login/${role}`, {
-      method: "POST",
-    });
-  },
-
   getMe: async () => {
     return fetchWithAuth("/api/auth/me");
   },
@@ -393,6 +243,26 @@ export const api = {
   // Tenders
   getTenders: async () => {
     return fetchWithAuth("/api/tenders");
+  },
+
+  getBidderTenders: async () => {
+    return fetchWithAuth("/api/tenders/bidder/my-tenders");
+  },
+
+  publishTender: async (tenderId: number) => {
+    return fetchWithAuth(`/api/tenders/${tenderId}/publish`, { method: "POST" });
+  },
+
+  assignBidder: async (tenderId: number, bidderId: number) => {
+    return fetchWithAuth(`/api/tenders/${tenderId}/assign-bidder`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ bidder_id: bidderId }),
+    });
+  },
+
+  getAssignedBidders: async (tenderId: number) => {
+    return fetchWithAuth(`/api/tenders/${tenderId}/assigned-bidders`);
   },
 
   getTender: async (id: number) => {
@@ -541,6 +411,15 @@ export const api = {
   },
 
   // Reports
+  getAllReports: async (params?: { tender_id?: number; risk_level?: string; status_filter?: string }) => {
+    const query = new URLSearchParams();
+    if (params?.tender_id) query.append("tender_id", params.tender_id.toString());
+    if (params?.risk_level) query.append("risk_level", params.risk_level);
+    if (params?.status_filter) query.append("status_filter", params.status_filter);
+    const qStr = query.toString();
+    return fetchWithAuth(`/api/reports${qStr ? `?${qStr}` : ""}`);
+  },
+
   getReportPreview: async (applicationId: number) => {
     return fetchWithAuth(`/api/reports/${applicationId}/preview`);
   },
@@ -550,24 +429,20 @@ export const api = {
     const headers: Record<string, string> = {};
     if (token) headers["Authorization"] = `Bearer ${token}`;
 
-    try {
-      const res = await fetch(`${API_BASE}/api/reports/${applicationId}/download`, {
-        headers,
-      });
-      if (!res.ok) throw new Error(await res.text());
-      const blob = await res.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `Compliance_Report_APP_${applicationId}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    } catch {
-      // Fallback: alert/success simulation
-      window.print();
+    const res = await fetch(`${API_BASE}/api/reports/${applicationId}/download`, { headers });
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(errText || "Failed to download report");
     }
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `Compliance_Report_APP_${applicationId}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   },
 
   // Notifications
@@ -633,6 +508,27 @@ export const api = {
 
   toggleUserActive: async (userId: number) => {
     return fetchWithAuth(`/api/admin/users/${userId}/toggle-active`, {
+      method: "POST",
+    });
+  },
+
+  // RAG / LLM
+  ragQuery: async (query: string, tenderId?: number, applicationId?: number) => {
+    return fetchWithAuth("/api/rag/query", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, tender_id: tenderId, application_id: applicationId, top_k: 5 }),
+    });
+  },
+
+  ingestDocument: async (documentId: number) => {
+    return fetchWithAuth(`/api/rag/documents/${documentId}/ingest`, {
+      method: "POST",
+    });
+  },
+
+  extractTenderRules: async (tenderId: number) => {
+    return fetchWithAuth(`/api/rag/tenders/${tenderId}/extract-rules`, {
       method: "POST",
     });
   },

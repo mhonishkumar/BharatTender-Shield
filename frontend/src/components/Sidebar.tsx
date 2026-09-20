@@ -2,7 +2,7 @@
 
 import React, { Suspense, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useSidebar } from "@/context/SidebarContext";
 import {
@@ -32,6 +32,7 @@ interface NavItem {
 
 const SidebarInner: React.FC = () => {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { role, logout } = useAuth();
   const { isOpen, setIsOpen } = useSidebar();
 
@@ -112,8 +113,24 @@ const SidebarInner: React.FC = () => {
         <nav className="space-y-1 px-2.5" aria-label="Sidebar Navigation">
           {currentNav.map((item) => {
             const Icon = item.icon;
-            const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href.split("?")[0].split("#")[0]));
+            let isActive = false;
+            const [itemPath, itemQuery] = item.href.split("?");
+            const currentTab = searchParams.get("tab");
 
+            if (itemPath === pathname) {
+              if (itemQuery) {
+                const itemTab = new URLSearchParams(itemQuery).get("tab");
+                isActive = currentTab === itemTab;
+              } else if (itemPath === "/admin") {
+                isActive = !currentTab || currentTab === "dashboard";
+              } else if (itemPath === "/dashboard") {
+                isActive = pathname === "/dashboard";
+              } else {
+                isActive = true;
+              }
+            } else if (itemPath !== "/dashboard" && itemPath !== "/admin" && pathname.startsWith(itemPath)) {
+              isActive = true;
+            }
             return (
               <Link
                 key={item.label}
@@ -203,7 +220,7 @@ const SidebarInner: React.FC = () => {
 };
 
 export const Sidebar: React.FC = () => (
-  <Suspense fallback={<aside className="hidden md:flex w-[240px] bg-white dark:bg-[#0F172A] border-r border-slate-200 dark:border-slate-800 flex-col flex-shrink-0 min-h-[calc(100vh-4rem)] no-print" />}>
+  <Suspense fallback={<aside className="hidden md:flex w-[240px] bg-white dark:bg-[#0F1E35] border-r border-slate-200 dark:border-slate-800/80 flex-col flex-shrink-0 min-h-[calc(100vh-4rem)] no-print" />}>
     <SidebarInner />
   </Suspense>
 );
