@@ -2,19 +2,19 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import {
-  MessageSquare,
-  X,
-  Send,
-  ShieldCheck,
-  ShieldAlert,
-  Bot,
-  User,
-  Sparkles,
-  Lock,
-  FileCheck,
-  CheckCircle2,
-  AlertTriangle
-} from "lucide-react";
+  ChatBubbleLeftEllipsisIcon as MessageSquare,
+  XMarkIcon as X,
+  PaperAirplaneIcon as Send,
+  ShieldCheckIcon as ShieldCheck,
+  ExclamationTriangleIcon as ShieldAlert,
+  CpuChipIcon as Bot,
+  UserIcon as User,
+  SparklesIcon as Sparkles,
+  LockClosedIcon as Lock,
+  DocumentCheckIcon as FileCheck,
+  CheckCircleIcon as CheckCircle2,
+  ExclamationTriangleIcon as AlertTriangle
+} from "@heroicons/react/24/outline";
 
 interface Message {
   id: string;

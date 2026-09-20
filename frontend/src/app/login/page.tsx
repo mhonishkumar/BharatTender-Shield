@@ -5,16 +5,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import {
-  Shield,
-  ArrowRight,
-  CheckCircle2,
-  Lock,
-  ShieldAlert,
-  Cpu,
-  UserCheck,
-  Eye,
-  EyeOff,
-} from "lucide-react";
+  ShieldCheckIcon as Shield,
+  ArrowRightIcon as ArrowRight,
+  CheckCircleIcon as CheckCircle2,
+  LockClosedIcon as Lock,
+  ExclamationTriangleIcon as ShieldAlert,
+  CpuChipIcon as Cpu,
+  CheckBadgeIcon as UserCheck,
+  EyeIcon as Eye,
+  EyeSlashIcon as EyeOff,
+} from "@heroicons/react/24/outline";
 
 export default function LoginPage() {
   const { login, isLoading } = useAuth();

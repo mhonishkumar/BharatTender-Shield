@@ -1,107 +1,116 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useSidebar } from "@/context/SidebarContext";
 import {
-  LayoutDashboard,
-  FileText,
-  PlusCircle,
-  Users,
-  CheckSquare,
-  ShieldAlert,
-  FileSpreadsheet,
-  History,
-  Settings,
-  Upload,
-  MessageSquare,
-  UserCheck,
-  Building,
-  LogOut,
-  UserPlus,
-  ShieldCheck,
-  User,
-  X
-} from "lucide-react";
+  Squares2X2Icon,
+  DocumentTextIcon,
+  PlusCircleIcon,
+  UserGroupIcon,
+  CheckBadgeIcon,
+  ExclamationTriangleIcon,
+  DocumentChartBarIcon,
+  ClockIcon,
+  Cog6ToothIcon,
+  ArrowUpTrayIcon,
+  ChatBubbleLeftRightIcon,
+  UserIcon,
+  BuildingOffice2Icon,
+  ArrowRightStartOnRectangleIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 
 interface NavItem {
   label: string;
   href: string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   badge?: string;
 }
 
-const SidebarContent: React.FC = () => {
+const SidebarInner: React.FC = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { role, logout } = useAuth();
   const { isOpen, setIsOpen } = useSidebar();
 
+  // Prevent background scrolling when mobile drawer is open (Item 5)
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
   // Navigation configurations per role
   const officerNav: NavItem[] = [
-    { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { label: "Tenders", href: "/officer/tenders", icon: FileText },
-    { label: "Create Tender", href: "/officer/tenders?create=true", icon: PlusCircle },
-    { label: "Applications", href: "/dashboard#applications", icon: Users },
-    { label: "Bidder Verification", href: "/officer/verification/2", icon: CheckSquare, badge: "Hero Demo" },
-    { label: "Risk Review", href: "/dashboard?filter=high-risk", icon: ShieldAlert },
-    { label: "Reports", href: "/reports/2", icon: FileSpreadsheet },
-    { label: "Audit Logs", href: "/audit", icon: History, badge: "SHA-256" },
-    { label: "Settings", href: "/dashboard#settings", icon: Settings },
+    { label: "Dashboard", href: "/dashboard", icon: Squares2X2Icon },
+    { label: "Tenders", href: "/officer/tenders", icon: DocumentTextIcon },
+    { label: "Create Tender", href: "/officer/tenders?create=true", icon: PlusCircleIcon },
+    { label: "Applications", href: "/dashboard#applications", icon: UserGroupIcon },
+    { label: "Bidder Verification", href: "/officer/verification/2", icon: CheckBadgeIcon, badge: "Hero Demo" },
+    { label: "Risk Review", href: "/dashboard?filter=high-risk", icon: ExclamationTriangleIcon },
+    { label: "Reports", href: "/reports/2", icon: DocumentChartBarIcon },
+    { label: "Audit Logs", href: "/audit", icon: ClockIcon, badge: "SHA-256" },
+    { label: "Settings", href: "/dashboard#settings", icon: Cog6ToothIcon },
   ];
 
   const bidderNav: NavItem[] = [
-    { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { label: "Available Tenders", href: "/officer/tenders", icon: FileText },
-    { label: "Apply for Tender", href: "/bidder/apply", icon: PlusCircle },
-    { label: "Documents", href: "/bidder/verification#documents", icon: Upload },
-    { label: "Verification Status", href: "/bidder/verification", icon: CheckSquare, badge: "Score" },
-    { label: "Clarifications", href: "/bidder/clarifications", icon: MessageSquare, badge: "Action" },
-    { label: "Reports", href: "/reports/2", icon: FileSpreadsheet },
-    { label: "Profile", href: "/dashboard#profile", icon: Building },
+    { label: "Dashboard", href: "/dashboard", icon: Squares2X2Icon },
+    { label: "Available Tenders", href: "/officer/tenders", icon: DocumentTextIcon },
+    { label: "Apply for Tender", href: "/bidder/apply", icon: PlusCircleIcon },
+    { label: "Documents", href: "/bidder/verification#documents", icon: ArrowUpTrayIcon },
+    { label: "Verification Status", href: "/bidder/verification", icon: CheckBadgeIcon, badge: "Score" },
+    { label: "Clarifications", href: "/bidder/clarifications", icon: ChatBubbleLeftRightIcon, badge: "Action" },
+    { label: "Reports", href: "/reports/2", icon: DocumentChartBarIcon },
+    { label: "Profile", href: "/dashboard#profile", icon: BuildingOffice2Icon },
   ];
 
   const adminNav: NavItem[] = [
-    { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-    { label: "Users", href: "/admin?tab=users", icon: Users },
-    { label: "Officers", href: "/admin?tab=officers", icon: UserCheck },
-    { label: "Bidders", href: "/admin?tab=bidders", icon: Building },
-    { label: "Tenders", href: "/officer/tenders", icon: FileText },
-    { label: "Verification Engine", href: "/officer/verification/2", icon: CheckSquare, badge: "Engine" },
-    { label: "Audit Logs", href: "/audit", icon: History, badge: "SHA-256" },
-    { label: "Reports", href: "/reports/2", icon: FileSpreadsheet },
-    { label: "Settings", href: "/admin?tab=settings", icon: Settings },
-    { label: "Profile", href: "/admin?tab=profile", icon: User },
+    { label: "Dashboard", href: "/admin", icon: Squares2X2Icon },
+    { label: "Users", href: "/admin?tab=users", icon: UserGroupIcon },
+    { label: "Officers", href: "/admin?tab=officers", icon: UserIcon },
+    { label: "Bidders", href: "/admin?tab=bidders", icon: BuildingOffice2Icon },
+    { label: "Tenders", href: "/officer/tenders", icon: DocumentTextIcon },
+    { label: "Verification Engine", href: "/officer/verification/2", icon: CheckBadgeIcon, badge: "Engine" },
+    { label: "Audit Logs", href: "/audit", icon: ClockIcon, badge: "SHA-256" },
+    { label: "Reports", href: "/reports/2", icon: DocumentChartBarIcon },
+    { label: "Settings", href: "/admin?tab=settings", icon: Cog6ToothIcon },
+    { label: "Profile", href: "/admin?tab=profile", icon: UserIcon },
   ];
 
   const currentNav = role === "BIDDER" ? bidderNav : (role === "ADMIN" ? adminNav : officerNav);
 
   const sidebarContent = (
-    <div className="flex flex-col justify-between h-full">
+    <div className="flex flex-col justify-between h-full bg-white dark:bg-[#0F1E35] transition-colors duration-150">
       <div className="py-4">
         {/* Mobile Header with close button */}
-        <div className="flex md:hidden items-center justify-between px-4 pb-3 mb-2 border-b border-slate-100">
-          <span className="font-bold text-xs text-[#0F294A]">Menu Navigation</span>
+        <div className="flex md:hidden items-center justify-between px-4 pb-3 mb-2 border-b border-slate-100 dark:border-slate-800">
+          <span className="font-bold text-xs text-[#0B1B3D] dark:text-white">Navigation Menu</span>
           <button
             onClick={() => setIsOpen(false)}
-            className="p-1.5 text-slate-500 hover:text-slate-900 rounded-md hover:bg-slate-100"
+            className="p-1.5 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
             aria-label="Close menu"
           >
-            <X className="w-5 h-5" />
+            <XMarkIcon className="w-5 h-5 stroke-2" />
           </button>
         </div>
 
         {/* Role Section Title */}
         <div className="px-4 mb-3">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-            {role === "BIDDER" ? "Bidder Portal" : (role === "ADMIN" ? "Admin Console" : "Procurement Portal")}
+          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+            {role === "BIDDER" ? "Bidder Enterprise Portal" : (role === "ADMIN" ? "Admin Control Panel" : "Procurement Portal")}
           </span>
         </div>
 
         {/* Nav Links */}
-        <nav className="space-y-1 px-2">
+        <nav className="space-y-1 px-2.5" aria-label="Sidebar Navigation">
           {currentNav.map((item) => {
             const Icon = item.icon;
             let isActive = false;
@@ -127,22 +136,22 @@ const SidebarContent: React.FC = () => {
                 key={item.label}
                 href={item.href}
                 onClick={() => setIsOpen(false)}
-                className={`flex items-center justify-between px-3 py-2 rounded-md text-xs font-medium transition-colors ${
+                className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                   isActive
-                    ? "bg-[#0F294A] text-white shadow-xs"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                    ? "bg-[#0B1B3D] dark:bg-blue-900/60 text-white shadow-xs"
+                    : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70"
                 }`}
               >
                 <div className="flex items-center space-x-2.5">
-                  <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-slate-500"}`} />
+                  <Icon className={`w-4 h-4 stroke-2 ${isActive ? "text-white" : "text-slate-500 dark:text-slate-400"}`} />
                   <span>{item.label}</span>
                 </div>
                 {item.badge && (
                   <span
-                    className={`text-[9px] px-1.5 py-0.5 rounded font-semibold ${
+                    className={`text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wide ${
                       isActive
                         ? "bg-blue-800 text-blue-100"
-                        : "bg-orange-100 text-orange-700 border border-orange-200"
+                        : "bg-orange-100 dark:bg-orange-950/60 text-orange-700 dark:text-orange-400 border border-orange-200 dark:border-orange-800/60"
                     }`}
                   >
                     {item.badge}
@@ -155,14 +164,14 @@ const SidebarContent: React.FC = () => {
       </div>
 
       {/* Footer Info & Sign Out */}
-      <div className="p-4 border-t border-slate-200 space-y-2">
-        <div className="bg-slate-50 p-2.5 rounded border border-slate-200 text-[11px] text-slate-500">
-          <div className="font-semibold text-slate-700 flex items-center space-x-1">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
-            <span>SIH 2026 Engine Active</span>
+      <div className="p-3.5 border-t border-slate-200 dark:border-slate-800 space-y-2">
+        <div className="bg-slate-50 dark:bg-slate-900/80 p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400">
+          <div className="font-semibold text-slate-700 dark:text-slate-200 flex items-center space-x-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block ring-2 ring-emerald-500/20" />
+            <span>SIH 2026 Engine</span>
           </div>
-          <span className="text-[10px] text-slate-400 block mt-0.5">
-            Deterministic + Demo AI
+          <span className="text-[10px] text-slate-400 dark:text-slate-500 block mt-0.5 font-mono">
+            RAG + Deterministic Rule Engine
           </span>
         </div>
 
@@ -171,9 +180,9 @@ const SidebarContent: React.FC = () => {
             setIsOpen(false);
             logout();
           }}
-          className="w-full flex items-center justify-center space-x-2 px-3 py-1.5 rounded text-xs font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 border border-slate-200 transition-colors"
+          className="w-full flex items-center justify-center space-x-2 px-3 py-2 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 border border-slate-200 dark:border-slate-800 transition-colors"
         >
-          <LogOut className="w-3.5 h-3.5" />
+          <ArrowRightStartOnRectangleIcon className="w-4 h-4 stroke-2" />
           <span>Sign Out</span>
         </button>
       </div>
@@ -183,21 +192,25 @@ const SidebarContent: React.FC = () => {
   return (
     <>
       {/* Desktop Sidebar (hidden on mobile, visible from md up) */}
-      <aside className="hidden md:flex w-[240px] bg-white border-r border-slate-200 flex-col justify-between flex-shrink-0 min-h-[calc(100vh-4rem)]">
+      <aside
+        id="sidebar"
+        className="hidden md:flex w-[240px] bg-white dark:bg-[#0F1E35] border-r border-slate-200 dark:border-slate-800/80 flex-col justify-between flex-shrink-0 min-h-[calc(100vh-4rem)] no-print"
+      >
         {sidebarContent}
       </aside>
 
-      {/* Mobile Drawer Backdrop & Drawer */}
+      {/* Mobile Drawer (Item 5) */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 md:hidden flex">
+        <div className="fixed inset-0 z-50 md:hidden flex no-print" role="dialog" aria-modal="true">
           {/* Dark backdrop overlay */}
           <div
-            className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity"
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"
             onClick={() => setIsOpen(false)}
+            aria-hidden="true"
           />
 
           {/* Drawer panel */}
-          <div className="relative w-[280px] max-w-[80vw] bg-white h-full shadow-2xl z-50 flex flex-col">
+          <div className="relative w-[280px] max-w-[85vw] bg-white dark:bg-[#0F1E35] h-full shadow-2xl z-50 flex flex-col animate-in slide-in-from-left duration-200">
             {sidebarContent}
           </div>
         </div>
@@ -207,7 +220,7 @@ const SidebarContent: React.FC = () => {
 };
 
 export const Sidebar: React.FC = () => (
-  <Suspense fallback={<div className="w-[240px] flex-shrink-0 bg-white border-r border-slate-200" />}>
-    <SidebarContent />
+  <Suspense fallback={<aside className="hidden md:flex w-[240px] bg-white dark:bg-[#0F1E35] border-r border-slate-200 dark:border-slate-800/80 flex-col flex-shrink-0 min-h-[calc(100vh-4rem)] no-print" />}>
+    <SidebarInner />
   </Suspense>
 );

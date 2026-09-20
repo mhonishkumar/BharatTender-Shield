@@ -8,15 +8,15 @@ import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { SIHDemoBar } from "@/components/SIHDemoBar";
 import {
-  MessageSquare,
-  Send,
-  CheckCircle2,
-  Clock,
-  Upload,
-  AlertTriangle,
-  Paperclip,
-  FileText
-} from "lucide-react";
+  ChatBubbleLeftRightIcon as MessageSquare,
+  PaperAirplaneIcon as Send,
+  CheckCircleIcon as CheckCircle2,
+  ClockIcon as Clock,
+  ArrowUpTrayIcon as Upload,
+  ExclamationTriangleIcon as AlertTriangle,
+  PaperClipIcon as Paperclip,
+  DocumentTextIcon as FileText,
+} from "@heroicons/react/24/outline";
 
 export default function BidderClarificationsPage() {
   const { user } = useAuth();

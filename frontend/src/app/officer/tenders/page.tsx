@@ -10,17 +10,17 @@ import { Sidebar } from "@/components/Sidebar";
 import { SIHDemoBar } from "@/components/SIHDemoBar";
 import { TenderRuleCompilerModal } from "@/components/TenderRuleCompilerModal";
 import {
-  FileText,
-  PlusCircle,
-  Cpu,
-  Calendar,
-  Building,
-  CheckCircle2,
-  Clock,
-  ArrowRight,
-  Upload,
-  X
-} from "lucide-react";
+  DocumentTextIcon as FileText,
+  PlusCircleIcon as PlusCircle,
+  CpuChipIcon as Cpu,
+  CalendarDaysIcon as Calendar,
+  BuildingOffice2Icon as Building,
+  CheckCircleIcon as CheckCircle2,
+  ClockIcon as Clock,
+  ArrowRightIcon as ArrowRight,
+  ArrowUpTrayIcon as Upload,
+  XMarkIcon as X,
+} from "@heroicons/react/24/outline";
 
 function TendersContent() {
   const searchParams = useSearchParams();

@@ -1,0 +1,46 @@
+MIT License
+
+Copyright (c) 2026 BharatTender Shield Team
+Smart India Hackathon 2026 — Problem Statement 26100
+AI-Powered Integrated Bid Compliance Verification Platform for GeM Procurement
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+ADDITIONAL NOTICE — GOVERNMENT PROCUREMENT CONTEXT:
+
+This software is designed for demonstration and educational purposes as part of
+the Smart India Hackathon 2026 (SIH 2026). It simulates compliance verification
+workflows for Government e-Marketplace (GeM) procurement.
+
+The following are simulated/mock in this release and must NOT be used for actual
+government procurement decisions without proper authorization:
+
+1. Mock Government API integrations (GSTN, ITD, MSME Udyam Portal, NIC)
+2. Demo bidder data and pre-seeded accounts
+3. Simulated document verification results
+
+The "AI NEVER automatically approves or rejects a bidder" principle is
+hardcoded into the system architecture. Final procurement decisions are legally
+reserved for the authorized Procurement Officer.
+
+For production deployment in actual GeM procurement workflows, proper
+authorization, auditing, and integration with live government APIs via
+API Setu / NIC is required.

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
@@ -9,18 +9,18 @@ import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { SIHDemoBar } from "@/components/SIHDemoBar";
 import {
-  FileText,
-  Upload,
-  CheckCircle2,
-  ArrowRight,
-  ArrowLeft,
-  Building,
-  ShieldCheck,
-  Check,
-  Paperclip
-} from "lucide-react";
+  DocumentTextIcon as FileText,
+  ArrowUpTrayIcon as Upload,
+  CheckCircleIcon as CheckCircle2,
+  ArrowRightIcon as ArrowRight,
+  ArrowLeftIcon as ArrowLeft,
+  BuildingOffice2Icon as Building,
+  ShieldCheckIcon as ShieldCheck,
+  CheckIcon as Check,
+  PaperClipIcon as Paperclip,
+} from "@heroicons/react/24/outline";
 
-export default function BidderApplyPage() {
+function BidderApplyPageContent() {
   const { user, role } = useAuth();
   const router = useRouter();
 
@@ -420,5 +420,13 @@ export default function BidderApplyPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function BidderApplyPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center text-sm text-slate-500">Loading...</div>}>
+      <BidderApplyPageContent />
+    </Suspense>
   );
 }

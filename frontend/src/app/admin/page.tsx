@@ -7,28 +7,28 @@ import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { api } from "@/lib/api";
 import {
-  ShieldAlert,
-  ShieldCheck,
-  Lock,
-  Server,
-  Users,
-  UserCheck,
-  Building,
-  UserPlus,
-  RotateCw,
-  CheckCircle2,
-  AlertTriangle,
-  Search,
-  Filter,
-  Eye,
-  Power,
-  KeyRound,
-  FileText,
-  MessageSquare,
-  ChevronLeft,
-  ChevronRight,
-  X
-} from "lucide-react";
+  ExclamationTriangleIcon as ShieldAlert,
+  ShieldCheckIcon as ShieldCheck,
+  LockClosedIcon as Lock,
+  ServerStackIcon as Server,
+  UserGroupIcon as Users,
+  CheckBadgeIcon as UserCheck,
+  BuildingOffice2Icon as Building,
+  UserPlusIcon as UserPlus,
+  ArrowPathIcon as RotateCw,
+  CheckCircleIcon as CheckCircle2,
+  ExclamationTriangleIcon as AlertTriangle,
+  MagnifyingGlassIcon as Search,
+  FunnelIcon as Filter,
+  EyeIcon as Eye,
+  PowerIcon as Power,
+  KeyIcon as KeyRound,
+  DocumentTextIcon as FileText,
+  ChatBubbleLeftRightIcon as MessageSquare,
+  ChevronLeftIcon as ChevronLeft,
+  ChevronRightIcon as ChevronRight,
+  XMarkIcon as X,
+} from "@heroicons/react/24/outline";
 
 function AdminPortalContent() {
   const searchParams = useSearchParams();

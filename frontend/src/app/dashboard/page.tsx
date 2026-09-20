@@ -9,21 +9,21 @@ import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { SIHDemoBar } from "@/components/SIHDemoBar";
 import {
-  FileText,
-  Clock,
-  CheckCircle2,
-  AlertTriangle,
-  XCircle,
-  ArrowRight,
-  Shield,
-  Eye,
-  PlusCircle,
-  FileCheck,
-  Building,
-  Upload,
-  Layers,
-  Users
-} from "lucide-react";
+  DocumentTextIcon as FileText,
+  ClockIcon as Clock,
+  CheckCircleIcon as CheckCircle2,
+  ExclamationTriangleIcon as AlertTriangle,
+  XCircleIcon as XCircle,
+  ArrowRightIcon as ArrowRight,
+  ShieldCheckIcon as Shield,
+  EyeIcon as Eye,
+  PlusCircleIcon as PlusCircle,
+  DocumentCheckIcon as FileCheck,
+  BuildingOffice2Icon as Building,
+  ArrowUpTrayIcon as Upload,
+  Square3Stack3DIcon as Layers,
+  UserGroupIcon as Users,
+} from "@heroicons/react/24/outline";
 
 export default function DashboardPage() {
   const { role, user, isLoading } = useAuth();
