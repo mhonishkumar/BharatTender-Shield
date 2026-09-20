@@ -34,7 +34,7 @@ from app import models, schemas
 from app.services.seed_data import initialize_demo_data
 from app.routers import (
     auth, tenders, applications, verification, mock_gov,
-    clarifications, decisions, reports, audit, admin, notifications
+    clarifications, decisions, reports, audit, admin, notifications, rag
 )
 
 
@@ -102,6 +102,7 @@ app.include_router(reports.router)
 app.include_router(audit.router)
 app.include_router(admin.router)
 app.include_router(notifications.router)
+app.include_router(rag.router)
 
 # Diagnostics endpoint
 from app.routers import diagnostics

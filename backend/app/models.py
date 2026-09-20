@@ -265,3 +265,38 @@ class TenderAssignment(Base):
     tender = relationship("Tender")
     bidder = relationship("BidderProfile")
     officer = relationship("User", foreign_keys=[assigned_by])
+
+
+class DocumentChunk(Base):
+    """
+    Stores text chunks and their vector embeddings for RAG retrieval.
+    Each chunk preserves full provenance: document, page, application, tender, bidder.
+    On PostgreSQL + pgvector: embedding stored as vector(768).
+    On SQLite (local dev): embedding stored as JSON text.
+    """
+    __tablename__ = "document_chunks"
+
+    id = Column(Integer, primary_key=True, index=True)
+    document_id = Column(Integer, ForeignKey("documents.id"), nullable=False, index=True)
+    application_id = Column(Integer, ForeignKey("applications.id"), nullable=True, index=True)
+    tender_id = Column(Integer, ForeignKey("tenders.id"), nullable=True, index=True)
+    bidder_id = Column(Integer, ForeignKey("bidder_profiles.id"), nullable=True, index=True)
+
+    chunk_text = Column(Text, nullable=False)
+    page_number = Column(Integer, default=1)
+    chunk_index = Column(Integer, default=0)
+    source_filename = Column(String(255), nullable=True)
+    doc_type = Column(String(50), nullable=True)  # GST_CERTIFICATE, PAN_CARD, etc.
+
+    # Embedding stored as JSON array (SQLite compat); pgvector migration handles vector type
+    embedding = Column(Text, nullable=True)  # JSON list of floats
+
+    # Metadata JSON (doc_type, file_name, etc.)
+    chunk_metadata = Column(Text, nullable=True)  # JSON string
+
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+    document = relationship("Document")
+    application = relationship("Application")
+    tender = relationship("Tender")
+    bidder = relationship("BidderProfile")

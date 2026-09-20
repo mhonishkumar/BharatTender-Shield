@@ -23,6 +23,7 @@ interface Message {
   timestamp: string;
   threatLevel?: "SAFE" | "WARNING" | "CRITICAL";
   details?: string[];
+  sources?: { document: string; page: number; text: string }[];
 }
 
 export const Chatbot: React.FC = () => {
@@ -177,7 +178,7 @@ export const Chatbot: React.FC = () => {
     };
   };
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputMessage.trim()) return;
 
@@ -191,11 +192,59 @@ export const Chatbot: React.FC = () => {
     const query = inputMessage;
     setMessages((prev) => [...prev, userMsg]);
     setInputMessage("");
+    
+    // Simple intent detection: if it asks about documents, applications, evidence, or tenders, use RAG
+    const qLower = query.toLowerCase();
+    const needsRag = qLower.includes("application") || qLower.includes("bidder") || 
+                     qLower.includes("evidence") || qLower.includes("document") || 
+                     qLower.includes("tender") || qLower.includes("discrepancy") ||
+                     qLower.includes("app-") || qLower.includes("why");
 
-    setTimeout(() => {
-      const botResponse = analyzeSecurityThreat(query);
-      setMessages((prev) => [...prev, botResponse]);
-    }, 400);
+    if (needsRag) {
+      // Add a loading message
+      const loadingId = Date.now().toString() + "-loading";
+      setMessages((prev) => [...prev, {
+        id: loadingId,
+        sender: "bot",
+        text: "Analyzing document evidence via RAG...",
+        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+      }]);
+
+      try {
+        const { api } = await import("@/lib/api");
+        // Extract application ID if mentioned (e.g. APP-2026-002 -> 2)
+        let appId: number | undefined = undefined;
+        const appMatch = query.match(/APP-\d{4}-(\d+)/i);
+        if (appMatch) {
+          appId = parseInt(appMatch[1], 10);
+        }
+        
+        const res = await api.ragQuery(query, undefined, appId);
+        
+        setMessages((prev) => prev.filter(m => m.id !== loadingId));
+        setMessages((prev) => [...prev, {
+          id: Date.now().toString(),
+          sender: "bot",
+          text: res.answer,
+          sources: res.sources,
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+        }]);
+      } catch (err) {
+        setMessages((prev) => prev.filter(m => m.id !== loadingId));
+        setMessages((prev) => [...prev, {
+          id: Date.now().toString(),
+          sender: "bot",
+          text: "Sorry, the RAG API is currently unavailable or returned an error.",
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+        }]);
+      }
+    } else {
+      // Use existing rule-based responses
+      setTimeout(() => {
+        const botResponse = analyzeSecurityThreat(query);
+        setMessages((prev) => [...prev, botResponse]);
+      }, 400);
+    }
   };
 
   const handleQuickPrompt = (promptText: string) => {
@@ -297,6 +346,19 @@ export const Chatbot: React.FC = () => {
                           <span>{d}</span>
                         </div>
                       ))}
+                    </div>
+                  )}
+                  
+                  {m.sources && m.sources.length > 0 && (
+                    <div className="mt-2 pt-2 border-t border-slate-200">
+                      <p className="text-[10px] font-bold text-slate-500 mb-1">Sources Cited:</p>
+                      <div className="space-y-1">
+                        {m.sources.map((src, i) => (
+                          <div key={i} className="bg-blue-50/50 p-1.5 rounded border border-blue-100 text-[10px]">
+                            <span className="font-semibold text-blue-800">{src.document} (Page {src.page})</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
 

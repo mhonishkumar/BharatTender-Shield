@@ -12,7 +12,10 @@ from app.core.security import get_current_user, require_role
 from app.services.document_processor import process_pdf_document
 from app.services.ai_extractor import extract_document_entities
 from app.services.audit_service import record_audit_log
+from app.services.chunking_service import chunk_document_pages, chunk_full_text
+from app.services.rag_service import store_document_chunks
 from app.config import settings
+
 
 
 router = APIRouter(prefix="/api/applications", tags=["Applications"])
@@ -199,6 +202,7 @@ async def upload_document(
 
     # Extract text and data entities
     raw_text = ""
+    pdf_res: dict = {"success": False, "pages": [], "full_text": ""}
     if suffix == ".pdf":
         pdf_res = process_pdf_document(str(dest_path))
         if pdf_res["success"]:
@@ -252,7 +256,59 @@ async def upload_document(
         details=f"Uploaded {doc_type}: {file.filename} ({file_size} bytes)."
     )
 
+    # --- RAG INGESTION: chunk + embed the document ---
+    try:
+        tender_id = application.tender_id
+        bidder_id = application.bidder_id
+
+        if suffix == ".pdf" and pdf_res.get("success") and pdf_res.get("pages"):
+            # Use page-level data for better provenance
+            chunks = chunk_document_pages(
+                pages_data=pdf_res["pages"],
+                document_id=doc_obj.id,
+                application_id=application.id,
+                tender_id=tender_id,
+                bidder_id=bidder_id,
+                source_filename=file.filename,
+                doc_type=doc_type,
+            )
+        elif raw_text:
+            # Fallback: chunk full text without page granularity
+            chunks = chunk_full_text(
+                full_text=raw_text,
+                document_id=doc_obj.id,
+                application_id=application.id,
+                tender_id=tender_id,
+                bidder_id=bidder_id,
+                source_filename=file.filename,
+                doc_type=doc_type,
+            )
+        else:
+            chunks = []
+
+        if chunks:
+            stored_count = store_document_chunks(db, chunks, doc_obj.id)
+            doc_obj.status = "EXTRACTED"
+            db.commit()
+
+            record_audit_log(
+                db=db,
+                action="EMBEDDING_GENERATED",
+                user_id=current_user.id,
+                user_email=current_user.email,
+                role=current_user.role,
+                application_id=application.id,
+                details=f"Generated {stored_count} embedding chunks for {doc_type}: {file.filename}"
+            )
+    except Exception as rag_err:
+        # RAG failure must not block document upload success
+        import logging
+        logging.getLogger("uvicorn.error").warning(
+            f"[RAG Ingestion] Non-critical: Failed to chunk/embed {file.filename}: {rag_err}"
+        )
+
     return doc_obj
+
 
 # Additional Standard Endpoints for Application Workflow
 from app.services.verifier import run_application_verification

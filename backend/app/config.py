@@ -41,6 +41,14 @@ class Settings:
     DATABASE_URL: str = _get_database_url()
 
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
+
+    # Supabase (for pgvector embedding storage)
+    SUPABASE_URL: str = os.getenv("SUPABASE_URL", "")
+    SUPABASE_SERVICE_ROLE_KEY: str = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
+
+    # Embedding model (configurable)
+    GEMINI_EMBEDDING_MODEL: str = os.getenv("GEMINI_EMBEDDING_MODEL", "models/text-embedding-004")
+    EMBEDDING_DIM: int = 768  # text-embedding-004 output dimension
     FRONTEND_URL: str = os.getenv("FRONTEND_URL", "").strip().rstrip("/")
     ALLOWED_ORIGINS: str = os.getenv("ALLOWED_ORIGINS", "")
 
