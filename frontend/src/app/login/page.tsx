@@ -114,7 +114,7 @@ export default function LoginPage() {
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1.5">
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1.5">
                     Official Email Address
                   </label>
                   <input
@@ -124,18 +124,18 @@ export default function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your official email"
-                    className="w-full text-sm border border-slate-300 rounded-xl p-3 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0F294A]/30 focus:border-[#0F294A] transition-all"
+                    className="w-full text-sm border border-slate-300 dark:border-slate-700 rounded-xl p-3 bg-slate-50 dark:bg-[#0A1628] text-slate-900 dark:text-white focus:bg-white dark:focus:bg-[#0F1E35] focus:outline-none focus:ring-2 focus:ring-[#0F294A]/30 dark:focus:ring-blue-500/50 focus:border-[#0F294A] dark:focus:border-blue-500 transition-all"
                     autoComplete="email"
                   />
                 </div>
 
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-xs font-bold text-slate-700">Password</label>
+                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Password</label>
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="text-xs text-slate-500 hover:text-slate-800 flex items-center space-x-1"
+                      className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white flex items-center space-x-1"
                     >
                       {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                       <span>{showPassword ? "Hide" : "Show"}</span>
@@ -148,7 +148,7 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
-                    className="w-full text-sm border border-slate-300 rounded-xl p-3 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0F294A]/30 focus:border-[#0F294A] transition-all"
+                    className="w-full text-sm border border-slate-300 dark:border-slate-700 rounded-xl p-3 bg-slate-50 dark:bg-[#0A1628] text-slate-900 dark:text-white focus:bg-white dark:focus:bg-[#0F1E35] focus:outline-none focus:ring-2 focus:ring-[#0F294A]/30 dark:focus:ring-blue-500/50 focus:border-[#0F294A] dark:focus:border-blue-500 transition-all"
                     autoComplete="current-password"
                   />
                 </div>
@@ -157,7 +157,7 @@ export default function LoginPage() {
                   id="login-submit"
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-[#0F294A] hover:bg-blue-900 text-white font-bold py-3.5 px-4 rounded-xl text-sm flex items-center justify-center space-x-2 transition-all shadow-md active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full bg-[#0F294A] dark:bg-blue-600 hover:bg-blue-900 dark:hover:bg-blue-700 text-white font-bold py-3.5 px-4 rounded-xl text-sm flex items-center justify-center space-x-2 transition-all shadow-md active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   <Lock className="w-4 h-4" />
                   <span>{isLoading ? "Verifying Credentials..." : "Secure Sign In"}</span>
