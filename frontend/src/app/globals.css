@@ -1,25 +1,64 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 @layer base {
   :root {
-    --navy-primary: #0F294A;
-    --navy-dark: #0A1B30;
-    --green-accent: #15803D;
-    --orange-accent: #EA580C;
+    --navy-primary: #0B1B3D;
+    --navy-secondary: #0F294A;
+    --navy-dark: #071026;
+    --green-accent: #166534;
+    --orange-accent: #C2410C;
+    --red-accent: #B91C1C;
+    /* Light mode: clean white */
     --bg-main: #F8FAFC;
+    --bg-surface: #FFFFFF;
+    --bg-card: #FFFFFF;
     --text-main: #0F172A;
+    --text-muted: #64748B;
     --border-subtle: #E2E8F0;
   }
+
+  .dark {
+    --navy-primary: #2563EB;
+    --navy-secondary: #1D4ED8;
+    --navy-dark: #1E3A8A;
+    --green-accent: #22C55E;
+    --orange-accent: #F97316;
+    --red-accent: #EF4444;
+    /* Dark mode: deep navy blue brand */
+    --bg-main: #0D1B2E;
+    --bg-surface: #0F1E35;
+    --bg-card: #132040;
+    --text-main: #F0F6FF;
+    --text-muted: #94A3B8;
+    --border-subtle: #1E3154;
+  }
+
   
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     background-color: var(--bg-main);
     color: var(--text-main);
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Focus visible accessibility outline */
+  :focus-visible {
+    outline: 2px solid #0F294A;
+    outline-offset: 2px;
+  }
+
+  .dark :focus-visible {
+    outline: 2px solid #38BDF8;
+    outline-offset: 2px;
   }
 }
 
@@ -31,12 +70,21 @@
 ::-webkit-scrollbar-track {
   background: #F1F5F9;
 }
+.dark ::-webkit-scrollbar-track {
+  background: #0D1B2E;
+}
 ::-webkit-scrollbar-thumb {
   background: #CBD5E1;
   border-radius: 3px;
 }
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
 ::-webkit-scrollbar-thumb:hover {
   background: #94A3B8;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #2563EB;
 }
 
 @keyframes marquee {
@@ -46,4 +94,52 @@
 
 .animate-marquee {
   animation: marquee 25s linear infinite;
+}
+
+/* Print Stylesheet (Item 10) */
+@media print {
+  header,
+  aside,
+  nav,
+  #sidebar,
+  .no-print,
+  button,
+  .chatbot-container,
+  #back-to-top,
+  #floating-contact,
+  #scroll-progress,
+  #env-banner {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 11pt !important;
+  }
+
+  main, #main-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .print-page-break {
+    page-break-before: always;
+  }
+
+  .card, .evidence-card, tr, .print-avoid-break {
+    page-break-inside: avoid;
+  }
+
+  a {
+    text-decoration: none !important;
+    color: #000000 !important;
+  }
+
+  /* Expand table borders for high-contrast print readability */
+  table, th, td {
+    border-color: #94a3b8 !important;
+  }
 }

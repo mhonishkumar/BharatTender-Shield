@@ -6,16 +6,16 @@ import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { SIHDemoBar } from "@/components/SIHDemoBar";
 import {
-  ShieldCheck,
-  ShieldAlert,
-  RotateCw,
-  Hash,
-  Clock,
-  UserCheck,
-  CheckCircle2,
-  Lock,
-  ArrowDown
-} from "lucide-react";
+  ShieldCheckIcon as ShieldCheck,
+  ExclamationTriangleIcon as ShieldAlert,
+  ArrowPathIcon as RotateCw,
+  HashtagIcon as Hash,
+  ClockIcon as Clock,
+  CheckBadgeIcon as UserCheck,
+  CheckCircleIcon as CheckCircle2,
+  LockClosedIcon as Lock,
+  ArrowDownIcon as ArrowDown,
+} from "@heroicons/react/24/outline";
 
 export default function AuditTrailPage() {
   const [logs, setLogs] = useState<any[]>([]);

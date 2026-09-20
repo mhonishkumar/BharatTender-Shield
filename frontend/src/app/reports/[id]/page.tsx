@@ -8,16 +8,16 @@ import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { SIHDemoBar } from "@/components/SIHDemoBar";
 import {
-  FileSpreadsheet,
-  Download,
-  CheckCircle2,
-  AlertTriangle,
-  XCircle,
-  FileText,
-  ShieldCheck,
-  Building,
-  ArrowLeft
-} from "lucide-react";
+  DocumentChartBarIcon as FileSpreadsheet,
+  ArrowDownTrayIcon as Download,
+  CheckCircleIcon as CheckCircle2,
+  ExclamationTriangleIcon as AlertTriangle,
+  XCircleIcon as XCircle,
+  DocumentTextIcon as FileText,
+  ShieldCheckIcon as ShieldCheck,
+  BuildingOffice2Icon as Building,
+  ArrowLeftIcon as ArrowLeft,
+} from "@heroicons/react/24/outline";
 
 export default function ReportPage() {
   const { id } = useParams();

@@ -8,16 +8,16 @@ import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { SIHDemoBar } from "@/components/SIHDemoBar";
 import {
-  ShieldCheck,
-  CheckCircle2,
-  AlertTriangle,
-  XCircle,
-  Upload,
-  FileText,
-  Clock,
-  ArrowRight,
-  MessageSquare
-} from "lucide-react";
+  ShieldCheckIcon as ShieldCheck,
+  CheckCircleIcon as CheckCircle2,
+  ExclamationTriangleIcon as AlertTriangle,
+  XCircleIcon as XCircle,
+  ArrowUpTrayIcon as Upload,
+  DocumentTextIcon as FileText,
+  ClockIcon as Clock,
+  ArrowRightIcon as ArrowRight,
+  ChatBubbleLeftRightIcon as MessageSquare,
+} from "@heroicons/react/24/outline";
 
 export default function BidderVerificationPage() {
   const { user } = useAuth();
