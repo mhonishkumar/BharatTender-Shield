@@ -57,12 +57,44 @@ def initialize_demo_data(db: Session):
         is_active=True
     )
     db.add(admin)
+    
+    # NEW @bharattender.com Demo Credentials
+    admin_bt = models.User(
+        email="admin@bharattender.com",
+        hashed_password=get_password_hash("Admin@123"),
+        full_name="System Administrator",
+        role="ADMIN",
+        organization="BharatTender Core",
+        is_active=True
+    )
+    db.add(admin_bt)
+
+    officer_bt = models.User(
+        email="officer@bharattender.com",
+        hashed_password=get_password_hash("Officer@123"),
+        full_name="Rajesh Verma, IPoS",
+        role="PROCUREMENT_OFFICER",
+        organization="GeM Central Procurement Directorate",
+        is_active=True
+    )
+    db.add(officer_bt)
+
+    bidder_bt = models.User(
+        email="bidder@bharattender.com",
+        hashed_password=get_password_hash("Bidder@123"),
+        full_name="Vikramaditya Sharma",
+        role="BIDDER",
+        organization="ABC Technologies Pvt Ltd",
+        is_active=True
+    )
+    db.add(bidder_bt)
+    
     db.commit()
     db.refresh(officer)
     db.refresh(bidder_user_a)
     db.refresh(bidder_user_b)
+    db.refresh(bidder_bt)
 
-    # 2. Create Bidder Profiles
     profile_a = models.BidderProfile(
         user_id=bidder_user_a.id,
         company_name="ABC Technologies Pvt Ltd",
@@ -75,6 +107,19 @@ def initialize_demo_data(db: Session):
         address="Plot 42, Tech Corridor Phase 1, Chennai, TN"
     )
     db.add(profile_a)
+
+    profile_bt = models.BidderProfile(
+        user_id=bidder_bt.id,
+        company_name="ABC Technologies Pvt Ltd",
+        reg_number="U72900TN2020PTC135790",
+        gstin="33ABCDE1234F1Z5",
+        pan="ABCDE1234F",
+        udyam_number="UDYAM-TN-02-0012345",
+        annual_turnover=125.5,
+        phone="+91 98401 23456",
+        address="Plot 42, Tech Corridor Phase 1, Chennai, TN"
+    )
+    db.add(profile_bt)
 
     profile_b = models.BidderProfile(
         user_id=bidder_user_b.id,

@@ -511,4 +511,25 @@ export const api = {
       method: "POST",
     });
   },
+
+  // RAG / LLM
+  ragQuery: async (query: string, tenderId?: number, applicationId?: number) => {
+    return fetchWithAuth("/api/rag/query", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, tender_id: tenderId, application_id: applicationId, top_k: 5 }),
+    });
+  },
+
+  ingestDocument: async (documentId: number) => {
+    return fetchWithAuth(`/api/rag/documents/${documentId}/ingest`, {
+      method: "POST",
+    });
+  },
+
+  extractTenderRules: async (tenderId: number) => {
+    return fetchWithAuth(`/api/rag/tenders/${tenderId}/extract-rules`, {
+      method: "POST",
+    });
+  },
 };
