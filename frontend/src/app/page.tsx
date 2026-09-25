@@ -42,19 +42,68 @@ export default function LandingPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSchemeModal, setActiveSchemeModal] = useState<any | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [slideTransitioning, setSlideTransitioning] = useState(false);
 
   const slides = [
-    { title: "Government e Marketplace (GeM) Integrated", sub: "Ministry of Petroleum & Natural Gas • CPCL Portal", badge: "SHA-256 Hash Chain Active" },
-    { title: "AI-Powered Compliance Verification", sub: "Extracts and verifies GST, PAN, and Udyam instantly.", badge: "Deterministic PyMuPDF Engine" },
-    { title: "Immutable Audit Trails", sub: "Cryptographic transparency for every officer decision.", badge: "Zero-Trust Architecture" }
+    {
+      title: "Government e-Marketplace (GeM) Integrated",
+      sub: "Ministry of Petroleum & Natural Gas • CPCL Procurement Portal",
+      badge: "SHA-256 Hash Chain Active",
+      tag: "GeM Integrated",
+      image: "/slide_gem.jpg",
+      gradient: "from-[#0F294A]/80 via-[#0F294A]/50 to-transparent",
+      accentColor: "bg-blue-500",
+      cta: "Explore Portal",
+    },
+    {
+      title: "AI-Powered Compliance Verification",
+      sub: "Extracts and verifies GST, PAN, and Udyam registration instantly with zero manual effort.",
+      badge: "Deterministic PyMuPDF Engine",
+      tag: "AI Engine",
+      image: "/slide_ai.jpg",
+      gradient: "from-emerald-950/85 via-emerald-900/50 to-transparent",
+      accentColor: "bg-emerald-500",
+      cta: "See How It Works",
+    },
+    {
+      title: "Immutable SHA-256 Audit Trails",
+      sub: "Every officer decision is sealed into a tamper-evident cryptographic audit log for full legal defensibility.",
+      badge: "Zero-Trust Architecture",
+      tag: "Audit Security",
+      image: "/slide_audit_v2.jpg",
+      gradient: "from-slate-950/85 via-slate-900/50 to-transparent",
+      accentColor: "bg-orange-500",
+      cta: "View Audit Demo",
+    },
+    {
+      title: "Make in India & MSME Procurement",
+      sub: "Automatically enforces 25% MSME mandate, Atmanirbhar Bharat GTE ban & DPIIT startup exemptions.",
+      badge: "PPP-MII Order 2017 Compliant",
+      tag: "Atmanirbhar Bharat",
+      image: "/slide_india.jpg",
+      gradient: "from-orange-950/80 via-orange-900/50 to-transparent",
+      accentColor: "bg-orange-400",
+      cta: "View Schemes",
+    },
   ];
 
+  const goToSlide = (i: number) => {
+    if (i === currentSlide) return;
+    setSlideTransitioning(true);
+    setTimeout(() => {
+      setCurrentSlide(i);
+      setSlideTransitioning(false);
+    }, 350);
+  };
+
+  const prevSlide = () => goToSlide((currentSlide - 1 + slides.length) % slides.length);
+  const nextSlide = () => goToSlide((currentSlide + 1) % slides.length);
+
   React.useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 4000);
+    const timer = setInterval(() => nextSlide(), 5000);
     return () => clearInterval(timer);
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentSlide]);
 
   const governmentSchemes = [
     {
@@ -235,105 +284,157 @@ export default function LandingPage() {
           )}
         </header>
 
-        {/* 2. HERO SECTION */}
-        <section id="home" className="relative bg-gradient-to-b from-blue-50/60 via-white to-[#F8FAFC] pt-8 md:pt-14 pb-12 md:pb-18 px-4 sm:px-6 lg:px-8 border-b border-slate-200">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-            {/* Hero Text Content */}
-            <div className="lg:col-span-7 space-y-5 md:space-y-6 text-left">
-              {/* SIH Pill Tag */}
-              <div className="inline-flex items-center space-x-2 bg-orange-50 border border-orange-200 text-orange-800 px-3.5 py-1.5 rounded-full text-xs font-semibold">
-                <span className="text-orange-600">🏆</span>
-                <span>Smart India Hackathon 2026 | PS 26100</span>
-                <span className="text-slate-300">•</span>
-                <span className="text-emerald-700 font-mono text-[11px]">SHA-256 Verified</span>
+        {/* 2. HERO SECTION — Full-Width Image Slider */}
+        <section id="home" className="relative w-full border-b border-slate-200 overflow-hidden">
+          {/* ── Slide Images ── */}
+          <div className="relative w-full h-[520px] sm:h-[580px] md:h-[640px] lg:h-[680px]">
+            {slides.map((slide, i) => (
+              <div
+                key={i}
+                className={`absolute inset-0 transition-opacity duration-700 ${
+                  i === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
+                }`}
+              >
+                {/* Background Image */}
+                <Image
+                  src={slide.image}
+                  alt={slide.title}
+                  fill
+                  className="object-cover object-center"
+                  priority={i === 0}
+                  sizes="100vw"
+                />
+                {/* Gradient Overlay */}
+                <div className={`absolute inset-0 bg-gradient-to-r ${slide.gradient}`} />
+                {/* Dark bottom fade for readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               </div>
+            ))}
 
-              {/* Main Headline */}
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-[#0F294A] leading-tight">
-                Bharat<span className="text-orange-500">Tender</span> <span className="text-emerald-600">Shield</span>
-              </h1>
+            {/* ── Slide Text Overlay ── */}
+            <div className="absolute inset-0 z-20 flex items-center">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                <div className="max-w-2xl">
+                  {/* Tag pill */}
+                  <div
+                    className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-bold text-white mb-4 transition-all duration-500 ${
+                      slideTransitioning ? "opacity-0 -translate-y-3" : "opacity-100 translate-y-0"
+                    }`}
+                    style={{ background: "rgba(255,255,255,0.15)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.3)" }}
+                  >
+                    <span className={`w-2 h-2 rounded-full animate-pulse ${slides[currentSlide].accentColor}`} />
+                    <span>{slides[currentSlide].tag}</span>
+                  </div>
 
-              <p className="text-lg sm:text-xl md:text-2xl font-bold text-slate-800 tracking-tight">
-                Every Bid Verified. Every Decision Defensible.
-              </p>
+                  {/* Title */}
+                  <h1
+                    className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-4 drop-shadow-lg transition-all duration-500 ${
+                      slideTransitioning ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
+                    }`}
+                  >
+                    {slides[currentSlide].title}
+                  </h1>
 
-              <p className="text-sm md:text-base text-slate-600 leading-relaxed max-w-2xl">
-                AI-assisted bid compliance verification and cross-document discrepancy detection platform for transparent, evidence-based GeM and public procurement.
-              </p>
+                  {/* Subtitle */}
+                  <p
+                    className={`text-sm sm:text-base md:text-lg text-white/90 leading-relaxed mb-6 max-w-xl drop-shadow transition-all duration-500 delay-75 ${
+                      slideTransitioning ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
+                    }`}
+                  >
+                    {slides[currentSlide].sub}
+                  </p>
 
-              {/* Hero Action Buttons */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
-                <Link
-                  href="/login"
-                  className="bg-[#0F294A] hover:bg-blue-900 text-white px-6 py-3 rounded-lg text-sm font-bold flex items-center justify-center space-x-2 transition-all shadow-md active:scale-95"
-                >
-                  <Briefcase className="w-4 h-4 text-emerald-400" />
-                  <span>Bidder Portal</span>
-                </Link>
-
-                <Link
-                  href="/login"
-                  className="bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 px-6 py-3 rounded-lg text-sm font-bold flex items-center justify-center space-x-2 transition-all shadow-xs active:scale-95"
-                >
-                  <ShieldCheck className="w-4 h-4 text-orange-500" />
-                  <span>Officer Console</span>
-                </Link>
-
-                <a
-                  href="#how-it-works"
-                  className="bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 px-5 py-3 rounded-lg text-sm font-bold flex items-center justify-center space-x-2 transition-all shadow-xs"
-                >
-                  <Play className="w-4 h-4 text-[#0F294A] fill-[#0F294A]" />
-                  <span>How It Works</span>
-                </a>
-              </div>
-
-              {/* Quick Trust Badges */}
-              <div className="flex flex-wrap items-center gap-4 pt-2 text-xs text-slate-500">
-                <div className="flex items-center space-x-1.5">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                  <span>Zero-Trust Cryptographic Hash</span>
-                </div>
-                <div className="flex items-center space-x-1.5">
-                  <Cpu className="w-4 h-4 text-blue-600" />
-                  <span>Deterministic Rule Engine</span>
-                </div>
-                <div className="flex items-center space-x-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-orange-600" />
-                  <span>Human-in-the-Loop Verdicts</span>
+                  {/* Badge + CTA row */}
+                  <div
+                    className={`flex flex-wrap items-center gap-3 transition-all duration-500 delay-100 ${
+                      slideTransitioning ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
+                    }`}
+                  >
+                    <Link
+                      href="/login"
+                      className="bg-white text-[#0F294A] hover:bg-slate-100 font-bold px-5 py-2.5 rounded-lg text-sm flex items-center space-x-2 shadow-lg transition-all active:scale-95"
+                    >
+                      <span>{slides[currentSlide].cta}</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
+                    <Link
+                      href="/login"
+                      className="text-white border border-white/50 hover:bg-white/10 font-semibold px-5 py-2.5 rounded-lg text-sm flex items-center space-x-2 transition-all backdrop-blur-sm"
+                    >
+                      <Briefcase className="w-4 h-4" />
+                      <span>Bidder Portal</span>
+                    </Link>
+                    <div
+                      className="hidden sm:inline-flex items-center space-x-1.5 text-white/70 text-xs font-mono"
+                      style={{ background: "rgba(0,0,0,0.3)", backdropFilter: "blur(6px)", padding: "6px 12px", borderRadius: "999px", border: "1px solid rgba(255,255,255,0.2)" }}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
+                      <span>{slides[currentSlide].badge}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="lg:col-span-5 flex justify-center mt-6 lg:mt-0">
-              <div className="relative max-w-sm md:max-w-md w-full p-6 bg-white rounded-2xl border border-slate-200 shadow-xl space-y-4 text-center overflow-hidden transition-all">
-                <div className="absolute top-2 right-4 flex space-x-1">
-                  {slides.map((_, i) => (
-                    <div key={i} className={`h-1.5 w-6 rounded-full transition-colors ${currentSlide === i ? "bg-[#0F294A]" : "bg-slate-200"}`} />
-                  ))}
-                </div>
-                
-                <div className="relative w-40 h-40 md:w-48 md:h-48 mx-auto flex items-center justify-center">
-                  <Image
-                    src="/logo.jpg"
-                    alt="BharatTender Shield Emblem"
-                    width={180}
-                    height={180}
-                    className="object-contain transition-transform duration-500 hover:scale-105"
-                    priority
-                  />
-                </div>
-                <div className="border-t border-slate-100 pt-3 min-h-[100px] flex flex-col justify-center transition-opacity duration-300">
-                  <span className="text-xs font-bold text-[#0F294A] block">
-                    {slides[currentSlide].title}
-                  </span>
-                  <span className="text-[11px] text-slate-500 font-medium block mt-1">
-                    {slides[currentSlide].sub}
-                  </span>
-                  <div className="mt-3 inline-block bg-slate-100 text-slate-700 text-[10px] font-mono px-2 py-1 rounded border border-slate-200">
-                    {slides[currentSlide].badge}
-                  </div>
-                </div>
+            {/* ── Arrow Navigation ── */}
+            <button
+              onClick={prevSlide}
+              aria-label="Previous slide"
+              className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white transition-all hover:scale-110"
+              style={{ background: "rgba(0,0,0,0.35)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.2)" }}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <button
+              onClick={nextSlide}
+              aria-label="Next slide"
+              className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white transition-all hover:scale-110"
+              style={{ background: "rgba(0,0,0,0.35)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.2)" }}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+            </button>
+
+            {/* ── Dot Indicators ── */}
+            <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 flex items-center space-x-2">
+              {slides.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => goToSlide(i)}
+                  aria-label={`Go to slide ${i + 1}`}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    i === currentSlide ? "w-8 bg-white" : "w-2 bg-white/50 hover:bg-white/80"
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* ── Slide Counter ── */}
+            <div
+              className="absolute top-4 right-4 z-30 text-white/60 text-xs font-mono"
+              style={{ background: "rgba(0,0,0,0.3)", backdropFilter: "blur(6px)", padding: "4px 10px", borderRadius: "999px" }}
+            >
+              {currentSlide + 1} / {slides.length}
+            </div>
+          </div>
+
+          {/* ── Trust strip below slider ── */}
+          <div className="bg-[#0F294A] text-white py-3 px-4">
+            <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-6 text-xs font-semibold">
+              <div className="flex items-center space-x-1.5">
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <span>Zero-Trust SHA-256 Hash</span>
+              </div>
+              <div className="flex items-center space-x-1.5">
+                <Cpu className="w-4 h-4 text-blue-300" />
+                <span>Deterministic AI Rule Engine</span>
+              </div>
+              <div className="flex items-center space-x-1.5">
+                <CheckCircle2 className="w-4 h-4 text-orange-300" />
+                <span>Human-in-the-Loop Verdicts</span>
+              </div>
+              <div className="flex items-center space-x-1.5">
+                <Briefcase className="w-4 h-4 text-yellow-300" />
+                <span>GeM Procurement Integrated</span>
               </div>
             </div>
           </div>
@@ -528,7 +629,7 @@ export default function LandingPage() {
                   { step: "5", title: "Evidence Review", desc: "View detailed proof", icon: SearchCheck },
                   { step: "6", title: "Officer Decision", desc: "Approve / Reject", icon: CheckCircle2 },
                   { step: "7", title: "Audit Report", desc: "With SHA-256 log", icon: FileSpreadsheet },
-                ].map((item, idx) => {
+                ].map((item) => {
                   const Icon = item.icon;
                   return (
                     <div key={item.step} className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex flex-col items-center space-y-2 shadow-2xs hover:border-[#0F294A] transition-colors relative">
@@ -571,11 +672,15 @@ export default function LandingPage() {
         <section id="features" className="py-12 md:py-16 px-4 sm:px-6 lg:px-8 bg-[#F8FAFC] border-b border-slate-200">
           <div className="max-w-7xl mx-auto space-y-8">
             <div className="text-center max-w-2xl mx-auto">
+              <div className="inline-flex items-center space-x-1.5 text-xs font-bold text-blue-700 uppercase tracking-wider mb-2">
+                <Shield className="w-3.5 h-3.5" />
+                <span>Platform Capabilities</span>
+              </div>
               <h2 className="text-2xl sm:text-3xl font-black text-[#0F294A] tracking-tight">
                 Enterprise Key Features
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                Built specifically for Smart India Hackathon 2026 Problem Statement 26100.
+                Designed for transparent, evidence-based government procurement at scale.
               </p>
             </div>
 
@@ -697,20 +802,22 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="text-center md:text-left space-y-1">
             <div className="font-bold text-sm text-white">
-              BharatTender Shield — SIH 2026 Problem Statement 26100
+              BharatTender Shield — Government Procurement Compliance Platform
             </div>
             <p className="text-[11px] text-slate-400">
-              Government e-Marketplace (GeM) & CPCL AI-Powered Bid Compliance System
+              Government e-Marketplace (GeM) &amp; AI-Powered Bid Compliance System
             </p>
             <div className="text-[10px] text-slate-500">
               Protected by SHA-256 tamper-evident cryptographic hash chains • Zero-Trust Procurement Architecture
             </div>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-semibold">
+            <Link href="/" className="hover:text-white transition-colors">Home</Link>
             <Link href="/login" className="hover:text-white transition-colors">Portal Login</Link>
             <Link href="/admin" className="hover:text-white transition-colors">Admin Console</Link>
-            <Link href="/officer/verification/2" className="hover:text-white transition-colors">Hero Demo</Link>
             <Link href="/audit" className="hover:text-white transition-colors">Audit Logs</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
           </div>
         </div>
       </footer>
