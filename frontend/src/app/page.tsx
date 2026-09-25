@@ -312,23 +312,23 @@ export default function LandingPage() {
             ))}
 
             {/* ── Slide Text Overlay ── */}
-            <div className="absolute inset-0 z-20 flex items-center">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div className="absolute inset-0 z-20 flex items-center mt-12 sm:mt-0">
+              <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 w-full">
                 <div className="max-w-2xl">
                   {/* Tag pill */}
                   <div
-                    className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-bold text-white mb-4 transition-all duration-500 ${
+                    className={`inline-flex items-center space-x-2 px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold text-white mb-3 sm:mb-4 transition-all duration-500 ${
                       slideTransitioning ? "opacity-0 -translate-y-3" : "opacity-100 translate-y-0"
                     }`}
                     style={{ background: "rgba(255,255,255,0.15)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.3)" }}
                   >
-                    <span className={`w-2 h-2 rounded-full animate-pulse ${slides[currentSlide].accentColor}`} />
+                    <span className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full animate-pulse ${slides[currentSlide].accentColor}`} />
                     <span>{slides[currentSlide].tag}</span>
                   </div>
 
                   {/* Title */}
                   <h1
-                    className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-4 drop-shadow-lg transition-all duration-500 ${
+                    className={`text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-3 sm:mb-4 drop-shadow-lg transition-all duration-500 ${
                       slideTransitioning ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
                     }`}
                   >
@@ -337,7 +337,7 @@ export default function LandingPage() {
 
                   {/* Subtitle */}
                   <p
-                    className={`text-sm sm:text-base md:text-lg text-white/90 leading-relaxed mb-6 max-w-xl drop-shadow transition-all duration-500 delay-75 ${
+                    className={`text-xs sm:text-base md:text-lg text-white/90 leading-relaxed mb-5 sm:mb-6 max-w-xl drop-shadow transition-all duration-500 delay-75 ${
                       slideTransitioning ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
                     }`}
                   >
@@ -346,26 +346,26 @@ export default function LandingPage() {
 
                   {/* Badge + CTA row */}
                   <div
-                    className={`flex flex-wrap items-center gap-3 transition-all duration-500 delay-100 ${
+                    className={`flex flex-wrap items-center gap-2 sm:gap-3 transition-all duration-500 delay-100 ${
                       slideTransitioning ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
                     }`}
                   >
                     <Link
                       href="/login"
-                      className="bg-white text-[#0F294A] hover:bg-slate-100 font-bold px-5 py-2.5 rounded-lg text-sm flex items-center space-x-2 shadow-lg transition-all active:scale-95"
+                      className="bg-white text-[#0F294A] hover:bg-slate-100 font-bold px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg text-xs sm:text-sm flex items-center space-x-2 shadow-lg transition-all active:scale-95"
                     >
                       <span>{slides[currentSlide].cta}</span>
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </Link>
                     <Link
                       href="/login"
-                      className="text-white border border-white/50 hover:bg-white/10 font-semibold px-5 py-2.5 rounded-lg text-sm flex items-center space-x-2 transition-all backdrop-blur-sm"
+                      className="text-white border border-white/50 hover:bg-white/10 font-semibold px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg text-xs sm:text-sm flex items-center space-x-2 transition-all backdrop-blur-sm"
                     >
-                      <Briefcase className="w-4 h-4" />
+                      <Briefcase className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       <span>Bidder Portal</span>
                     </Link>
                     <div
-                      className="hidden sm:inline-flex items-center space-x-1.5 text-white/70 text-xs font-mono"
+                      className="hidden md:inline-flex items-center space-x-1.5 text-white/70 text-[10px] sm:text-xs font-mono"
                       style={{ background: "rgba(0,0,0,0.3)", backdropFilter: "blur(6px)", padding: "6px 12px", borderRadius: "999px", border: "1px solid rgba(255,255,255,0.2)" }}
                     >
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
@@ -376,11 +376,11 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* ── Arrow Navigation ── */}
+            {/* ── Arrow Navigation (Hidden on Mobile) ── */}
             <button
               onClick={prevSlide}
               aria-label="Previous slide"
-              className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white transition-all hover:scale-110"
+              className="hidden sm:flex absolute left-5 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full items-center justify-center text-white transition-all hover:scale-110"
               style={{ background: "rgba(0,0,0,0.35)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.2)" }}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
@@ -388,7 +388,7 @@ export default function LandingPage() {
             <button
               onClick={nextSlide}
               aria-label="Next slide"
-              className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white transition-all hover:scale-110"
+              className="hidden sm:flex absolute right-5 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full items-center justify-center text-white transition-all hover:scale-110"
               style={{ background: "rgba(0,0,0,0.35)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.2)" }}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
@@ -418,23 +418,25 @@ export default function LandingPage() {
           </div>
 
           {/* ── Trust strip below slider ── */}
-          <div className="bg-[#0F294A] text-white py-3 px-4">
-            <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-6 text-xs font-semibold">
+          <div className="bg-[#0F294A] text-white py-3 px-3 sm:px-4">
+            <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-[10px] sm:text-xs font-semibold">
               <div className="flex items-center space-x-1.5">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span>Zero-Trust SHA-256 Hash</span>
+                <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
+                <span>Zero-Trust SHA-256</span>
               </div>
               <div className="flex items-center space-x-1.5">
-                <Cpu className="w-4 h-4 text-blue-300" />
-                <span>Deterministic AI Rule Engine</span>
+                <Cpu className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-300" />
+                <span className="hidden sm:inline">Deterministic AI Rule Engine</span>
+                <span className="sm:hidden">AI Engine</span>
               </div>
               <div className="flex items-center space-x-1.5">
-                <CheckCircle2 className="w-4 h-4 text-orange-300" />
-                <span>Human-in-the-Loop Verdicts</span>
+                <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-300" />
+                <span className="hidden sm:inline">Human-in-the-Loop Verdicts</span>
+                <span className="sm:hidden">Officer Verdicts</span>
               </div>
               <div className="flex items-center space-x-1.5">
-                <Briefcase className="w-4 h-4 text-yellow-300" />
-                <span>GeM Procurement Integrated</span>
+                <Briefcase className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-300" />
+                <span>GeM Integrated</span>
               </div>
             </div>
           </div>
