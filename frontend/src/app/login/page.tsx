@@ -14,6 +14,7 @@ import {
   CheckBadgeIcon as UserCheck,
   EyeIcon as Eye,
   EyeSlashIcon as EyeOff,
+  HomeIcon as Home,
 } from "@heroicons/react/24/outline";
 
 export default function LoginPage() {
@@ -28,19 +29,29 @@ export default function LoginPage() {
     setError(null);
     try {
       await login(email, password);
-    } catch (err: any) {
-      setError(err.message || "Invalid credentials. Please check your email and password.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Invalid credentials. Please check your email and password.";
+      setError(message);
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 dark:from-slate-900 dark:via-[#0F1E35] dark:to-slate-900 flex flex-col">
       {/* Top Banner */}
-      <div className="bg-[#0F294A] dark:bg-slate-900 text-white py-2 px-4 text-center text-xs font-medium border-b border-transparent dark:border-slate-800">
-        <span className="hidden sm:inline">
+      <div className="bg-[#0F294A] dark:bg-slate-900 text-white py-2 px-4 text-center text-xs font-medium border-b border-transparent dark:border-slate-800 flex items-center justify-between">
+        <Link
+          href="/"
+          className="flex items-center space-x-1.5 text-blue-300 hover:text-white transition-colors text-xs font-semibold"
+          aria-label="Go to Home Page"
+        >
+          <Home className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Home</span>
+        </Link>
+        <span className="hidden sm:inline text-slate-300">
           Government of India &nbsp;•&nbsp; Ministry of Petroleum &amp; Natural Gas &nbsp;•&nbsp; Secure Procurement Portal
         </span>
-        <span className="sm:hidden">BharatTender Shield &nbsp;•&nbsp; Secure Portal</span>
+        <span className="sm:hidden text-slate-300">BharatTender Shield &nbsp;•&nbsp; Secure Portal</span>
+        <div className="w-16 hidden sm:block" /> {/* spacer to center text */}
       </div>
 
       <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
@@ -114,7 +125,7 @@ export default function LoginPage() {
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1.5">
+                  <label htmlFor="login-email" className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1.5">
                     Official Email Address
                   </label>
                   <input
@@ -131,11 +142,12 @@ export default function LoginPage() {
 
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Password</label>
+                    <label htmlFor="login-password" className="text-xs font-bold text-slate-700 dark:text-slate-300">Password</label>
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white flex items-center space-x-1"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white flex items-center space-x-1 transition-colors"
                     >
                       {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                       <span>{showPassword ? "Hide" : "Show"}</span>
@@ -172,10 +184,14 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Back to home */}
-            <div className="mt-4 text-center">
-              <Link href="/" className="text-xs text-slate-500 dark:text-slate-400 hover:text-[#0F294A] dark:hover:text-white flex items-center justify-center space-x-1 transition-colors">
-                <span>← Back to Home</span>
+            {/* Back to Home — prominent button */}
+            <div className="mt-4">
+              <Link
+                href="/"
+                className="w-full flex items-center justify-center space-x-2 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-semibold py-2.5 px-4 rounded-xl text-sm transition-all shadow-sm"
+              >
+                <Home className="w-4 h-4" />
+                <span>Back to Home Page</span>
               </Link>
             </div>
           </div>
@@ -184,7 +200,7 @@ export default function LoginPage() {
 
       {/* Footer */}
       <footer className="py-4 border-t border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-[#0F1E35]/80 text-center text-xs text-slate-500 dark:text-slate-400">
-        BharatTender Shield &nbsp;•&nbsp; GeM Procurement Compliance System &nbsp;•&nbsp; SIH 2026 Problem Statement 26100
+        BharatTender Shield &nbsp;•&nbsp; GeM Procurement Compliance System &nbsp;•&nbsp; Government of India
       </footer>
     </div>
   );
